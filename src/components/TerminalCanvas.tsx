@@ -7,7 +7,7 @@ export const TerminalCanvas = React.forwardRef<HTMLDivElement>(
 
     return (
       <>
-        <div className="mockup-code w-full min-w-200 min-h-100 m-10 overflow-hidden">
+        <div className="mockup-code w-full min-w-200 min-h-100 m-10 p-2 overflow-hidden">
           <EditorContent
             ref={canvasRef}
             className="canvas min-w-lg caret-accent"

@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import "./styles.css";
 import { Toolbar } from "./components/Toolbar";
 import { TerminalCanvas } from "./components/TerminalCanvas";
@@ -6,9 +6,12 @@ import { SidePanel } from "./components/SidePanel";
 import { EditorContext, useEditor } from "@tiptap/react";
 import { extensions } from "./lib/tiptap/extensions";
 import { DEFAULT_CONTENT, textToEditorContent } from "./lib/tiptap/content";
+import { initializeAnsiColorStyles } from "./lib/ansi-colors";
 
 export default function App() {
   const canvasRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(initializeAnsiColorStyles, []);
 
   const editor = useEditor({
     extensions,
