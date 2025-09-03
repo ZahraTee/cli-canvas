@@ -2,9 +2,7 @@ import { useCurrentEditor } from "@tiptap/react";
 import React, { useState } from "react";
 import {
   ANSI_COLOR_DEFAULTS,
-  getBgColorClassName,
   getColorCssVar,
-  getFgColorClassName,
   type AnsiColor,
 } from "../lib/ansi-colors";
 
@@ -62,7 +60,7 @@ export function SidePanel({
                   editor
                     ?.chain()
                     .focus()
-                    .setSpanClass(getFgColorClassName(color as AnsiColor))
+                    .toggleFgColor(color as AnsiColor)
                     .run();
                 }}
               >
@@ -74,7 +72,7 @@ export function SidePanel({
                   editor
                     ?.chain()
                     .focus()
-                    .setSpanClass(getBgColorClassName(color as AnsiColor))
+                    .toggleBgColor(color as AnsiColor)
                     .run();
                 }}
               >

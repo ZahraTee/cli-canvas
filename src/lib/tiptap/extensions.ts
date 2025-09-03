@@ -6,6 +6,11 @@ import { Paragraph } from "@tiptap/extension-paragraph";
 import { Text } from "@tiptap/extension-text";
 import { Underline } from "@tiptap/extension-underline";
 import { Mark } from "@tiptap/core";
+import {
+  getBgColorClassName,
+  getFgColorClassName,
+  type AnsiColor,
+} from "../ansi-colors";
 
 const TerminalDocument = Document.extend({
   content: "codeBlock",
@@ -13,24 +18,21 @@ const TerminalDocument = Document.extend({
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
-    spanClass: {
-      setSpanClass: (className: string) => ReturnType;
-      unsetSpanClass: (className?: string) => ReturnType;
+    fgColor: {
+      toggleFgColor: (color: AnsiColor) => ReturnType;
+      setFgColor: (color: AnsiColor) => ReturnType;
+      unsetFgColor: () => ReturnType;
+    };
+    bgColor: {
+      toggleBgColor: (color: AnsiColor) => ReturnType;
+      setBgColor: (color: AnsiColor) => ReturnType;
+      unsetBgColor: () => ReturnType;
     };
   }
 }
 
-declare module "@tiptap/core" {
-  interface Commands<ReturnType> {
-    spanClass: {
-      setSpanClass: (className: string) => ReturnType;
-      unsetSpanClass: (className?: string) => ReturnType;
-    };
-  }
-}
-
-export const SpanClass = Mark.create({
-  name: "spanClass",
+export const FgColor = Mark.create({
+  name: "fgColor",
 
   addOptions() {
     return {
@@ -43,24 +45,18 @@ export const SpanClass = Mark.create({
       {
         types: this.options.types,
         attributes: {
-          spanClass: {
+          fgColor: {
             default: null,
             renderHTML: (attributes) => {
-              if (!attributes.spanClass || attributes.spanClass.length === 0) {
-                return {};
-              }
-              // Join array of classes back into a string
-              const classString = Array.isArray(attributes.spanClass)
-                ? attributes.spanClass.join(" ")
-                : attributes.spanClass;
               return {
-                class: classString,
+                class: attributes.fgColor,
               };
             },
             parseHTML: (element) => {
-              const classList = Array.from(element.classList);
               return {
-                spanClass: classList.length > 0 ? classList : null,
+                fgColor: [...element.classList].find((c) =>
+                  c.startsWith("ansi-fg-color-"),
+                ),
               };
             },
           },
@@ -71,83 +67,92 @@ export const SpanClass = Mark.create({
 
   addCommands() {
     return {
-      setSpanClass:
-        (spanClass: string) =>
-        ({ chain, state }) => {
-          const { selection } = state;
-          const { from, to } = selection;
-
-          // Get existing attributes at the current selection
-          const existingMark = state.doc.rangeHasMark(
-            from,
-            to,
-            state.schema.marks.textStyle,
-          );
-          let existingClasses: string[] = [];
-
-          if (existingMark) {
-            // Find the textStyle mark in the current selection
-            state.doc.nodesBetween(from, to, (node) => {
-              const mark = node.marks.find((m) => m.type.name === "textStyle");
-              if (mark && mark.attrs.spanClass) {
-                existingClasses = Array.isArray(mark.attrs.spanClass)
-                  ? [...mark.attrs.spanClass]
-                  : mark.attrs.spanClass.split(" ").filter(Boolean);
-                return false; // Stop iteration
-              }
-            });
-          }
-
-          // Add the new class if it's not already present
-          if (!existingClasses.includes(spanClass)) {
-            existingClasses.push(spanClass);
-          }
-
+      toggleFgColor:
+        (color: AnsiColor) =>
+        ({ chain }) => {
           return chain()
-            .setMark("textStyle", { spanClass: existingClasses })
+            .toggleMark("textStyle", {
+              fgColor: getFgColorClassName(color),
+            })
             .run();
         },
-
-      unsetSpanClass:
-        (className?: string) =>
-        ({ chain, state }) => {
-          if (!className) {
-            // Remove all span classes
-            return chain()
-              .setMark("textStyle", { spanClass: null })
-              .removeEmptyTextStyle()
-              .run();
-          }
-
-          const { selection } = state;
-          const { from, to } = selection;
-
-          // Get existing classes
-          let existingClasses: string[] = [];
-          state.doc.nodesBetween(from, to, (node) => {
-            const mark = node.marks.find((m) => m.type.name === "textStyle");
-            if (mark && mark.attrs.spanClass) {
-              existingClasses = Array.isArray(mark.attrs.spanClass)
-                ? [...mark.attrs.spanClass]
-                : mark.attrs.spanClass.split(" ").filter(Boolean);
-              return false; // Stop iteration
-            }
-          });
-
-          // Remove the specific class
-          const updatedClasses = existingClasses.filter(
-            (cls) => cls !== className,
-          );
-
-          if (updatedClasses.length === 0) {
-            return chain()
-              .setMark("textStyle", { spanClass: null })
-              .removeEmptyTextStyle()
-              .run();
-          }
-
+      setFgColor:
+        (color: AnsiColor) =>
+        ({ chain }) => {
           return chain()
-            .setMark("textStyle", { spanClass: updatedClasses })
+            .setMark("textStyle", { fgColor: getFgColorClassName(color) })
+            .run();
+        },
+      unsetFgColor:
+        () =>
+        ({ chain }) => {
+          return chain()
+            .setMark("textStyle", { fgColor: null })
+            .removeEmptyTextStyle()
+            .run();
+        },
+    };
+  },
+});
+
+export const BgColor = Mark.create({
+  name: "bgColor",
+
+  addOptions() {
+    return {
+      types: ["textStyle"],
+    };
+  },
+
+  addGlobalAttributes() {
+    return [
+      {
+        types: this.options.types,
+        attributes: {
+          bgColor: {
+            default: null,
+            renderHTML: (attributes) => {
+              return {
+                class: attributes.bgColor,
+              };
+            },
+            parseHTML: (element) => {
+              return {
+                bgColor: [...element.classList].find((c) =>
+                  c.startsWith("ansi-bg-color-"),
+                ),
+              };
+            },
+          },
+        },
+      },
+    ];
+  },
+
+  addCommands() {
+    return {
+      toggleBgColor:
+        (color: AnsiColor) =>
+        ({ chain }) => {
+          return chain()
+            .toggleMark("textStyle", {
+              bgColor: getBgColorClassName(color),
+            })
+            .run();
+        },
+      setBgColor:
+        (color: AnsiColor) =>
+        ({ chain }) => {
+          return chain()
+            .setMark("textStyle", { bgColor: getBgColorClassName(color) })
+            .run();
+        },
+      unsetBgColor:
+        () =>
+        ({ chain }) => {
+          return chain()
+            .setMark("textStyle", { bgColor: null })
+            .removeEmptyTextStyle()
             .run();
         },
     };
@@ -165,5 +170,6 @@ export const extensions = [
   Bold,
   Underline,
   TextStyle,
-  SpanClass,
+  FgColor,
+  BgColor,
 ];
