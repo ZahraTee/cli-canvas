@@ -1,10 +1,12 @@
 import { useCurrentEditor } from "@tiptap/react";
 import React, { useState } from "react";
 import {
+  BACKGROUND_COLOR_CSS_VAR,
+  DEFAULT_BACKGROUND_COLOR,
   ANSI_COLOR_DEFAULTS,
   getColorCssVar,
   type AnsiColor,
-} from "../lib/ansi-colors";
+} from "../lib/color";
 
 export function SidePanel({
   onClickResetContent,
@@ -12,6 +14,10 @@ export function SidePanel({
   onClickResetContent: () => void;
 }) {
   const { editor } = useCurrentEditor();
+
+  const [backgroundColor, setBackgroundColor] = useState(
+    DEFAULT_BACKGROUND_COLOR,
+  );
 
   const [ansiColorMappings, setAnsiColorMappings] =
     useState(ANSI_COLOR_DEFAULTS);
@@ -35,11 +41,25 @@ export function SidePanel({
           </button>
         </div>
 
-        <h3 className="font-medium mb-2">Colors</h3>
-        <div className="grid grid-cols-4 gap-1 items-center">
+        <h3 className="font-semibold mb-2">Colors</h3>
+        <div className="flex justify-between mb-2 items-center">
+          <span className="text-sm">Background</span>
+          <input
+            type="color"
+            value={backgroundColor}
+            onChange={(e) => {
+              setBackgroundColor(e.target.value);
+              document.documentElement.style.setProperty(
+                BACKGROUND_COLOR_CSS_VAR,
+                e.target.value,
+              );
+            }}
+          />
+        </div>
+        <div className="grid grid-cols-4 gap-2 items-center">
           {Object.entries(ansiColorMappings).map(([color, value]) => (
             <React.Fragment key={color}>
-              <span>{color}</span>
+              <span className="text-sm">{color}</span>
               <input
                 type="color"
                 value={value}

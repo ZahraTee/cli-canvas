@@ -1,3 +1,6 @@
+export const DEFAULT_BACKGROUND_COLOR = "#000000";
+export const BACKGROUND_COLOR_CSS_VAR = "--terminal-bg-color";
+
 export const ANSI_COLORS = [
   "black",
   "red",
@@ -32,9 +35,14 @@ export function getBgColorClassName(color: AnsiColor) {
   return `ansi-color-bg-${color}`;
 }
 
-export function initializeAnsiColorStyles() {
+export function initializeColorVariables() {
   const root = document.documentElement;
   const sheet = document.styleSheets[0];
+
+  root.style.setProperty(BACKGROUND_COLOR_CSS_VAR, DEFAULT_BACKGROUND_COLOR);
+  sheet.insertRule(
+    `.terminal { background-color: var(${BACKGROUND_COLOR_CSS_VAR}); }`,
+  );
 
   for (const color of ANSI_COLORS) {
     const fgClassName = getFgColorClassName(color);

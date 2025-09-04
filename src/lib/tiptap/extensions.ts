@@ -10,7 +10,7 @@ import {
   getBgColorClassName,
   getFgColorClassName,
   type AnsiColor,
-} from "../ansi-colors";
+} from "../color";
 
 const TerminalDocument = Document.extend({
   content: "codeBlock",

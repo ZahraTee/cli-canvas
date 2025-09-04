@@ -6,12 +6,12 @@ import { SidePanel } from "./components/SidePanel";
 import { EditorContext, useEditor } from "@tiptap/react";
 import { extensions } from "./lib/tiptap/extensions";
 import { DEFAULT_CONTENT, textToEditorContent } from "./lib/tiptap/content";
-import { initializeAnsiColorStyles } from "./lib/ansi-colors";
+import { initializeColorVariables } from "./lib/color";
 
 export default function App() {
   const canvasRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(initializeAnsiColorStyles, []);
+  useEffect(initializeColorVariables, []);
 
   const editor = useEditor({
     extensions,
