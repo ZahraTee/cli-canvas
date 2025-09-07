@@ -28,7 +28,7 @@ export default function App() {
     <EditorContext.Provider value={editorContext}>
       <main className="flex flex-col column w-full h-full items-center font-mono">
         <Toolbar />
-        <section className="flex h-full w-full flex-1 items-center gap-10">
+        <section className="flex h-full w-full flex-1 overflow-hidden">
           <TerminalCanvas ref={canvasRef} />
           <SidePanel onClickResetContent={resetEditorContent} />
         </section>

@@ -7,18 +7,18 @@ export const TerminalCanvas = React.forwardRef<HTMLDivElement>(
     const { editor } = useCurrentEditor();
 
     return (
-      <>
+      <div className="overflow-y-auto w-full min-w-50 min-h-100 p-12">
         <div
-          className="terminal mockup-code w-full min-w-50 min-h-100 m-10 p-2 overflow-hidden"
+          className="terminal mockup-code px-2 pb-2 "
           style={{ backgroundColor: `var(${BACKGROUND_COLOR_CSS_VAR})` }}
         >
           <EditorContent
             ref={canvasRef}
-            className="canvas min-w-lg caret-accent"
+            className="canvas w-full caret-accent"
             editor={editor}
           />
         </div>
-      </>
+      </div>
     );
   },
 );

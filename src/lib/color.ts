@@ -13,6 +13,10 @@ export const ANSI_COLORS = [
 
 export type AnsiColor = (typeof ANSI_COLORS)[number];
 
+export function getAnsiColorLabel(color: AnsiColor) {
+  return color[0].toLocaleUpperCase() + color.slice(1);
+}
+
 export const ANSI_COLOR_DEFAULTS: Record<AnsiColor, string> = {
   black: "#000000",
   red: "#ff0000",

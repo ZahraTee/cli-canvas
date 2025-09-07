@@ -3,6 +3,10 @@ export function textToEditorContent(text: string) {
 }
 
 export const DEFAULT_CONTENT = `
+
+
+
+
   *=========================================*
   │                                         │
   │        ~ Welcome to CliCanvas ~         │
@@ -11,4 +15,9 @@ export const DEFAULT_CONTENT = `
   |      but you can edit this text!        │
   │                                         │
   *=========================================*
+
+
+
+
+
   `;
