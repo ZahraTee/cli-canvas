@@ -3,11 +3,11 @@ import React, { useState } from "react";
 import {
   BACKGROUND_COLOR_CSS_VAR,
   DEFAULT_BACKGROUND_COLOR,
-  ANSI_COLOR_DEFAULTS,
   getColorCssVar,
   type AnsiColor,
   getAnsiColorLabel,
 } from "../lib/color";
+import { THEME_MACOS_TERMINAL_APP } from "../lib/themes";
 
 export function SidePanel({
   onClickResetContent,
@@ -17,8 +17,9 @@ export function SidePanel({
   const [backgroundColor, setBackgroundColor] = useState(
     DEFAULT_BACKGROUND_COLOR,
   );
-  const [ansiColorMappings, setAnsiColorMappings] =
-    useState(ANSI_COLOR_DEFAULTS);
+  const [ansiColorMappings, setAnsiColorMappings] = useState(
+    THEME_MACOS_TERMINAL_APP.colors,
+  );
 
   return (
     <menu className="flex flex-col items-center w-[400px] min-w-[280px] px-3 py-6 overflow-y-auto border-l border-l-gray-700">
@@ -100,10 +101,10 @@ function ColorSection({
               type="color"
               value={value}
               onChange={(e) => {
-                setAnsiColorMappings((prev: Record<AnsiColor, string>) => ({
-                  ...prev,
+                setAnsiColorMappings({
+                  ...ansiColorMappings,
                   [color as AnsiColor]: e.target.value as string,
-                }));
+                });
                 document.documentElement.style.setProperty(
                   getColorCssVar(color as AnsiColor),
                   e.target.value,

@@ -1,3 +1,5 @@
+import { THEME_MACOS_TERMINAL_APP } from "./themes";
+
 export const DEFAULT_BACKGROUND_COLOR = "#000000";
 export const BACKGROUND_COLOR_CSS_VAR = "--terminal-bg-color";
 
@@ -5,6 +7,7 @@ export const ANSI_COLORS = [
   "black",
   "red",
   "green",
+  "yellow",
   "blue",
   "purple",
   "cyan",
@@ -16,16 +19,6 @@ export type AnsiColor = (typeof ANSI_COLORS)[number];
 export function getAnsiColorLabel(color: AnsiColor) {
   return color[0].toLocaleUpperCase() + color.slice(1);
 }
-
-export const ANSI_COLOR_DEFAULTS: Record<AnsiColor, string> = {
-  black: "#000000",
-  red: "#ff0000",
-  green: "#00ff00",
-  blue: "#0000ff",
-  purple: "#9900cc",
-  cyan: "#00cccc",
-  white: "#ffffff",
-};
 
 export function getColorCssVar(color: AnsiColor) {
   return `--ansi-color-${color}`;
@@ -53,7 +46,7 @@ export function initializeColorVariables() {
     const bgClassName = getBgColorClassName(color);
 
     const cssVar = getColorCssVar(color);
-    root.style.setProperty(cssVar, ANSI_COLOR_DEFAULTS[color]);
+    root.style.setProperty(cssVar, THEME_MACOS_TERMINAL_APP.colors[color]);
     sheet.insertRule(`.${fgClassName} { color: var(${cssVar}); }`);
     sheet.insertRule(`.${bgClassName} { background-color: var(${cssVar}); }`);
   }
