@@ -1,36 +1,24 @@
 import { useCurrentEditor } from "@tiptap/react";
-import React, { useState } from "react";
+import React from "react";
 import {
   BACKGROUND_COLOR_CSS_VAR,
-  DEFAULT_BACKGROUND_COLOR,
   getColorCssVar,
   type AnsiColor,
   getAnsiColorLabel,
 } from "../lib/color";
-import { THEME_MACOS_TERMINAL_APP } from "../lib/themes";
+import { type AnsiColorVariant } from "../lib/themes";
+import { useTheme } from "../stores/theme";
 
 export function SidePanel({
   onClickResetContent,
 }: {
   onClickResetContent: () => void;
 }) {
-  const [backgroundColor, setBackgroundColor] = useState(
-    DEFAULT_BACKGROUND_COLOR,
-  );
-  const [ansiColorMappings, setAnsiColorMappings] = useState(
-    THEME_MACOS_TERMINAL_APP.colors,
-  );
-
   return (
     <menu className="flex flex-col items-center w-[400px] min-w-[280px] px-3 py-6 overflow-y-auto border-l border-l-gray-700">
       <div className="flex-1 flex flex-col gap-4">
         <FormattingSection />
-        <ColorSection
-          backgroundColor={backgroundColor}
-          setBackgroundColor={setBackgroundColor}
-          ansiColorMappings={ansiColorMappings}
-          setAnsiColorMappings={setAnsiColorMappings}
-        />
+        <ColorSection variant="standard" />
       </div>
       <div className="flex flex-0 mt-4 gap-2">
         <button className="btn btn-sm btn-error" onClick={onClickResetContent}>
@@ -63,25 +51,21 @@ function FormattingSection() {
   );
 }
 
-function ColorSection({
-  backgroundColor,
-  setBackgroundColor,
-  ansiColorMappings,
-  setAnsiColorMappings,
-}: {
-  backgroundColor: string;
-  setBackgroundColor: React.Dispatch<string>;
-  ansiColorMappings: Record<AnsiColor, string>;
-  setAnsiColorMappings: React.Dispatch<Record<AnsiColor, string>>;
-}) {
+function ColorSection({ variant }: { variant: AnsiColorVariant }) {
   const { editor } = useCurrentEditor();
+  const {
+    theme: { colors },
+    setBackgroundColor,
+    setAnsiColor,
+  } = useTheme();
+  const ansiColorMappings = colors[variant];
   return (
     <Section title="Colors">
       <div className="flex justify-between mb-3 items-center">
         <span className="text-sm">Background</span>
         <input
           type="color"
-          value={backgroundColor}
+          value={colors.background}
           onChange={(e) => {
             setBackgroundColor(e.target.value);
             document.documentElement.style.setProperty(
@@ -101,10 +85,11 @@ function ColorSection({
               type="color"
               value={value}
               onChange={(e) => {
-                setAnsiColorMappings({
-                  ...ansiColorMappings,
-                  [color as AnsiColor]: e.target.value as string,
-                });
+                setAnsiColor(
+                  color as AnsiColor,
+                  variant,
+                  e.target.value as string,
+                );
                 document.documentElement.style.setProperty(
                   getColorCssVar(color as AnsiColor),
                   e.target.value,

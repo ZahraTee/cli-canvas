@@ -1,20 +1,33 @@
 import type { AnsiColor } from "./color";
 
-export type ColorTheme = {
+export type PresetTheme = {
   name: string;
-  colors: Record<AnsiColor, string>;
+  colors: ColorPalette;
 };
 
-export const THEME_MACOS_TERMINAL_APP: ColorTheme = {
+type ColorPalette = { background: string } & Record<
+  AnsiColorVariant,
+  AnsiColorMappings
+>;
+
+export type AnsiColorVariant = "standard";
+type AnsiColorMappings = Record<AnsiColor, string>;
+
+export type ActiveTheme = Exclude<PresetTheme, "name">;
+
+export const THEME_MACOS_TERMINAL_APP: PresetTheme = {
   name: "Terminal.app",
   colors: {
-    black: "#000000",
-    red: "#ff0000",
-    green: "#00A600",
-    yellow: "#999900",
-    blue: "#0000B2",
-    purple: "#B200B2",
-    cyan: "#00A6B2",
-    white: "#FFFFFF",
+    background: "#000000",
+    standard: {
+      black: "#000000",
+      red: "#FF0000",
+      green: "#00A600",
+      yellow: "#999900",
+      blue: "#0000B2",
+      purple: "#B200B2",
+      cyan: "#00A6B2",
+      white: "#FFFFFF",
+    },
   },
 };

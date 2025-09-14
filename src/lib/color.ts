@@ -46,7 +46,10 @@ export function initializeColorVariables() {
     const bgClassName = getBgColorClassName(color);
 
     const cssVar = getColorCssVar(color);
-    root.style.setProperty(cssVar, THEME_MACOS_TERMINAL_APP.colors[color]);
+    root.style.setProperty(
+      cssVar,
+      THEME_MACOS_TERMINAL_APP.colors.standard[color],
+    );
     sheet.insertRule(`.${fgClassName} { color: var(${cssVar}); }`);
     sheet.insertRule(`.${bgClassName} { background-color: var(${cssVar}); }`);
   }
