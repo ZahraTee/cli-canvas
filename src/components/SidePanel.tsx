@@ -1,5 +1,5 @@
 import { useCurrentEditor } from "@tiptap/react";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   type AnsiColor,
   getAnsiColorLabel,
@@ -15,7 +15,7 @@ export function SidePanel({
 }) {
   return (
     <menu className="flex flex-col items-center w-[400px] min-w-[280px] px-3 py-6 overflow-y-auto border-l border-l-gray-700">
-      <div className="flex-1 flex flex-col gap-4">
+      <div className="w-full flex-1 flex flex-col gap-4 px-3">
         <FormattingSection />
         <ThemeSection />
       </div>
@@ -110,7 +110,7 @@ function ColorVariantControls({ variant }: { variant: AnsiColorVariant }) {
   const ansiColorMappings = colors[variant];
   return (
     <Section title={`${variant} Colors`}>
-      <div className="grid grid-cols-[auto_auto_1fr] gap-y-2 gap-x-5 items-center">
+      <div className="grid grid-cols-[auto_1fr_auto] gap-y-2 gap-x-5 items-center">
         {Object.entries(ansiColorMappings).map(([color, value]) => (
           <React.Fragment key={color}>
             <span className="text-sm text-gray-200">
@@ -118,6 +118,7 @@ function ColorVariantControls({ variant }: { variant: AnsiColorVariant }) {
             </span>
             <input
               type="color"
+              className="justify-self-center"
               value={value}
               onChange={(e) => {
                 setAnsiColor(
@@ -169,14 +170,30 @@ function Section({
   children: React.ReactNode;
   border?: boolean;
 }) {
+  const detailsRef = useRef<HTMLDetailsElement | null>(null);
+
+  useEffect(() => {
+    if (detailsRef.current) {
+      detailsRef.current.open = true;
+    }
+  }, []);
+
+  const outerClassName = border
+    ? "w-full border-b border-b-gray-600 pb-3 group"
+    : "group w-full";
+
+  if (!title) {
+    return (
+      <div className={`${outerClassName} flex flex-col gap-5`}>{children}</div>
+    );
+  }
+
   return (
-    <div className={border ? "border-b border-b-gray-600 pb-6" : ""}>
-      {title && (
-        <h3 className="mb-3 text-xs uppercase tracking-widest text-teal-400">
-          {title}
-        </h3>
-      )}
-      <div className="flex flex-col gap-6">{children}</div>
-    </div>
+    <details ref={detailsRef} className={outerClassName}>
+      <summary className="flex justify-between text-xs uppercase tracking-widest text-teal-400 marker:content-[''] group-open:after:content-['-'] after:content-['+']">
+        {title}
+      </summary>
+      <div className="flex flex-col gap-5 mt-3">{children}</div>
+    </details>
   );
 }
