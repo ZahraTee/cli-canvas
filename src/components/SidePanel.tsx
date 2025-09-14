@@ -113,7 +113,7 @@ function ColorVariantControls({ variant }: { variant: AnsiColorVariant }) {
       <div className="grid grid-cols-[auto_1fr_auto] gap-y-2 gap-x-5 items-center">
         {Object.entries(ansiColorMappings).map(([color, value]) => (
           <React.Fragment key={color}>
-            <span className="text-sm text-gray-200">
+            <span className="text-sm">
               {getAnsiColorLabel(color as AnsiColor)}
             </span>
             <input
