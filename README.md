@@ -1,3 +1,3 @@
-# cli-canvas
+# mocli
 
 Under construction, check back soon~ 🏗️

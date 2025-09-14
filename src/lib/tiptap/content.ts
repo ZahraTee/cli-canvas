@@ -9,10 +9,10 @@ export const DEFAULT_CONTENT = `
 
   *=========================================*
   │                                         │
-  │        ~ Welcome to CliCanvas ~         │
+  │          ~ Welcome to Mocli ~           │
   │                                         │
-  │      Right now you can't do much,       │
-  |      but you can edit this text!        │
+  │       You can edit this text and        │
+  |           adjust the theme!             │
   │                                         │
   *=========================================*
 
