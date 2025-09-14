@@ -14,7 +14,7 @@ export function SidePanel({
   onClickResetContent: () => void;
 }) {
   return (
-    <menu className="flex flex-col items-center w-[400px] min-w-[280px] px-3 py-6 overflow-y-auto border-l border-l-gray-700">
+    <menu className="flex flex-col items-center w-[400px] min-w-[280px] px-3 py-6 overflow-y-auto border-l border-l-gray-300 dark:border-l-gray-600">
       <div className="w-full flex-1 flex flex-col gap-4 px-3">
         <FormattingSection />
         <ThemeSection />
@@ -34,13 +34,13 @@ function FormattingSection() {
     <Section title="Text Formatting" border>
       <div className="flex gap-2">
         <button
-          className="btn btn-sm btn-neutral"
+          className="btn btn-sm"
           onClick={() => editor?.chain().focus().toggleBold().run()}
         >
           Bold
         </button>
         <button
-          className="btn btn-sm btn-neutral"
+          className="btn btn-sm"
           onClick={() => editor?.chain().focus().toggleUnderline().run()}
         >
           Underline
@@ -130,7 +130,7 @@ function ColorVariantControls({ variant }: { variant: AnsiColorVariant }) {
             />
             <div className="flex gap-1">
               <button
-                className="btn btn-sm btn-neutral"
+                className="btn btn-sm "
                 onClick={() => {
                   editor
                     ?.chain()
@@ -142,7 +142,7 @@ function ColorVariantControls({ variant }: { variant: AnsiColorVariant }) {
                 FG
               </button>
               <button
-                className="btn btn-sm btn-neutral"
+                className="btn btn-sm "
                 onClick={() => {
                   editor
                     ?.chain()
@@ -179,18 +179,18 @@ function Section({
   }, []);
 
   const outerClassName = border
-    ? "w-full border-b border-b-gray-600 pb-3 group"
+    ? "w-full border-b border-b-gray-300 dark:border-b-gray-600 pb-3 group"
     : "group w-full";
 
   if (!title) {
     return (
-      <div className={`${outerClassName} flex flex-col gap-5`}>{children}</div>
+      <div className={`${outerClassName} flex flex-col gap-4`}>{children}</div>
     );
   }
 
   return (
     <details ref={detailsRef} className={outerClassName}>
-      <summary className="flex justify-between text-xs uppercase tracking-widest text-teal-400 marker:content-[''] group-open:after:content-['-'] after:content-['+']">
+      <summary className="flex justify-between text-xs uppercase tracking-widest  dark:text-indigo-300 text-indigo-700 py-1 marker:content-[''] group-open:after:content-['-'] after:content-['+']">
         {title}
       </summary>
       <div className="flex flex-col gap-5 mt-3">{children}</div>
