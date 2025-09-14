@@ -10,6 +10,7 @@ import {
   getBgColorClassName,
   getFgColorClassName,
   type AnsiColor,
+  type AnsiColorVariant,
 } from "../color";
 
 const TerminalDocument = Document.extend({
@@ -19,13 +20,19 @@ const TerminalDocument = Document.extend({
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     fgColor: {
-      toggleFgColor: (color: AnsiColor) => ReturnType;
-      setFgColor: (color: AnsiColor) => ReturnType;
+      toggleFgColor: (
+        color: AnsiColor,
+        variant: AnsiColorVariant,
+      ) => ReturnType;
+      setFgColor: (color: AnsiColor, variant: AnsiColorVariant) => ReturnType;
       unsetFgColor: () => ReturnType;
     };
     bgColor: {
-      toggleBgColor: (color: AnsiColor) => ReturnType;
-      setBgColor: (color: AnsiColor) => ReturnType;
+      toggleBgColor: (
+        color: AnsiColor,
+        variant: AnsiColorVariant,
+      ) => ReturnType;
+      setBgColor: (color: AnsiColor, variant: AnsiColorVariant) => ReturnType;
       unsetBgColor: () => ReturnType;
     };
   }
@@ -68,19 +75,21 @@ export const FgColor = Mark.create({
   addCommands() {
     return {
       toggleFgColor:
-        (color: AnsiColor) =>
+        (color: AnsiColor, variant: AnsiColorVariant) =>
         ({ chain }) => {
           return chain()
             .toggleMark("textStyle", {
-              fgColor: getFgColorClassName(color),
+              fgColor: getFgColorClassName(color, variant),
             })
             .run();
         },
       setFgColor:
-        (color: AnsiColor) =>
+        (color: AnsiColor, variant: AnsiColorVariant) =>
         ({ chain }) => {
           return chain()
-            .setMark("textStyle", { fgColor: getFgColorClassName(color) })
+            .setMark("textStyle", {
+              fgColor: getFgColorClassName(color, variant),
+            })
             .run();
         },
       unsetFgColor:
@@ -132,19 +141,21 @@ export const BgColor = Mark.create({
   addCommands() {
     return {
       toggleBgColor:
-        (color: AnsiColor) =>
+        (color: AnsiColor, variant: AnsiColorVariant) =>
         ({ chain }) => {
           return chain()
             .toggleMark("textStyle", {
-              bgColor: getBgColorClassName(color),
+              bgColor: getBgColorClassName(color, variant),
             })
             .run();
         },
       setBgColor:
-        (color: AnsiColor) =>
+        (color: AnsiColor, variant: AnsiColorVariant) =>
         ({ chain }) => {
           return chain()
-            .setMark("textStyle", { bgColor: getBgColorClassName(color) })
+            .setMark("textStyle", {
+              bgColor: getBgColorClassName(color, variant),
+            })
             .run();
         },
       unsetBgColor:

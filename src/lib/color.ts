@@ -1,6 +1,5 @@
-import { THEME_MACOS_TERMINAL_APP } from "./themes";
+import { DEFAULT_THEME, THEME_MACOS_TERMINAL_APP } from "./themes";
 
-export const DEFAULT_BACKGROUND_COLOR = "#000000";
 export const BACKGROUND_COLOR_CSS_VAR = "--terminal-bg-color";
 
 export const ANSI_COLORS = [
@@ -13,44 +12,57 @@ export const ANSI_COLORS = [
   "cyan",
   "white",
 ] as const;
-
 export type AnsiColor = (typeof ANSI_COLORS)[number];
+
+export const ANSI_COLOR_VARIANTS = ["standard", "intense"] as const;
+export type AnsiColorVariant = (typeof ANSI_COLOR_VARIANTS)[number];
 
 export function getAnsiColorLabel(color: AnsiColor) {
   return color[0].toLocaleUpperCase() + color.slice(1);
 }
 
-export function getColorCssVar(color: AnsiColor) {
-  return `--ansi-color-${color}`;
+export function getColorCssVar(color: AnsiColor, variant: AnsiColorVariant) {
+  return `--ansi-color-${color}${variant !== "standard" ? `-${variant}` : ""}`;
 }
 
-export function getFgColorClassName(color: AnsiColor) {
-  return `ansi-color-fg-${color}`;
+export function getFgColorClassName(
+  color: AnsiColor,
+  variant: AnsiColorVariant,
+) {
+  return `ansi-color-fg-${color}${variant !== "standard" ? `-${variant}` : ""}`;
 }
 
-export function getBgColorClassName(color: AnsiColor) {
-  return `ansi-color-bg-${color}`;
+export function getBgColorClassName(
+  color: AnsiColor,
+  variant: AnsiColorVariant,
+) {
+  return `ansi-color-bg-${color}${variant !== "standard" ? `-${variant}` : ""}`;
 }
 
 export function initializeColorVariables() {
   const root = document.documentElement;
   const sheet = document.styleSheets[0];
 
-  root.style.setProperty(BACKGROUND_COLOR_CSS_VAR, DEFAULT_BACKGROUND_COLOR);
+  root.style.setProperty(
+    BACKGROUND_COLOR_CSS_VAR,
+    DEFAULT_THEME.colors.background,
+  );
   sheet.insertRule(
     `.terminal { background-color: var(${BACKGROUND_COLOR_CSS_VAR}); }`,
   );
 
-  for (const color of ANSI_COLORS) {
-    const fgClassName = getFgColorClassName(color);
-    const bgClassName = getBgColorClassName(color);
+  for (const variant of ANSI_COLOR_VARIANTS) {
+    for (const color of ANSI_COLORS) {
+      const fgClassName = getFgColorClassName(color, variant);
+      const bgClassName = getBgColorClassName(color, variant);
 
-    const cssVar = getColorCssVar(color);
-    root.style.setProperty(
-      cssVar,
-      THEME_MACOS_TERMINAL_APP.colors.standard[color],
-    );
-    sheet.insertRule(`.${fgClassName} { color: var(${cssVar}); }`);
-    sheet.insertRule(`.${bgClassName} { background-color: var(${cssVar}); }`);
+      const cssVar = getColorCssVar(color, variant);
+      root.style.setProperty(
+        cssVar,
+        THEME_MACOS_TERMINAL_APP.colors[variant][color],
+      );
+      sheet.insertRule(`.${fgClassName} { color: var(${cssVar}); }`);
+      sheet.insertRule(`.${bgClassName} { background-color: var(${cssVar}); }`);
+    }
   }
 }

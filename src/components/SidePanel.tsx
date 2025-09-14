@@ -5,8 +5,8 @@ import {
   getColorCssVar,
   type AnsiColor,
   getAnsiColorLabel,
+  type AnsiColorVariant,
 } from "../lib/color";
-import { type AnsiColorVariant } from "../lib/themes";
 import { useTheme } from "../stores/theme";
 
 export function SidePanel({
@@ -18,7 +18,7 @@ export function SidePanel({
     <menu className="flex flex-col items-center w-[400px] min-w-[280px] px-3 py-6 overflow-y-auto border-l border-l-gray-700">
       <div className="flex-1 flex flex-col gap-4">
         <FormattingSection />
-        <ColorSection variant="standard" />
+        <ColorSection />
       </div>
       <div className="flex flex-0 mt-4 gap-2">
         <button className="btn btn-sm btn-error" onClick={onClickResetContent}>
@@ -32,7 +32,7 @@ export function SidePanel({
 function FormattingSection() {
   const { editor } = useCurrentEditor();
   return (
-    <Section title="Text Formatting">
+    <Section title="Text Formatting" border>
       <div className="flex gap-2">
         <button
           className="btn btn-sm btn-neutral"
@@ -51,17 +51,14 @@ function FormattingSection() {
   );
 }
 
-function ColorSection({ variant }: { variant: AnsiColorVariant }) {
-  const { editor } = useCurrentEditor();
+function ColorSection() {
   const {
     theme: { colors },
     setBackgroundColor,
-    setAnsiColor,
   } = useTheme();
-  const ansiColorMappings = colors[variant];
   return (
-    <Section title="Colors">
-      <div className="flex justify-between mb-3 items-center">
+    <Section>
+      <div className="flex justify-between items-center">
         <span className="text-sm">Background</span>
         <input
           type="color"
@@ -75,6 +72,23 @@ function ColorSection({ variant }: { variant: AnsiColorVariant }) {
           }}
         />
       </div>
+      <Section border>
+        <ColorVariantControls variant="standard" />
+        <ColorVariantControls variant="intense" />
+      </Section>
+    </Section>
+  );
+}
+
+function ColorVariantControls({ variant }: { variant: AnsiColorVariant }) {
+  const { editor } = useCurrentEditor();
+  const {
+    theme: { colors },
+    setAnsiColor,
+  } = useTheme();
+  const ansiColorMappings = colors[variant];
+  return (
+    <Section title={`${variant} Colors`}>
       <div className="grid grid-cols-[auto_auto_1fr] gap-y-2 gap-x-5 items-center">
         {Object.entries(ansiColorMappings).map(([color, value]) => (
           <React.Fragment key={color}>
@@ -91,7 +105,7 @@ function ColorSection({ variant }: { variant: AnsiColorVariant }) {
                   e.target.value as string,
                 );
                 document.documentElement.style.setProperty(
-                  getColorCssVar(color as AnsiColor),
+                  getColorCssVar(color as AnsiColor, variant),
                   e.target.value,
                 );
               }}
@@ -103,7 +117,7 @@ function ColorSection({ variant }: { variant: AnsiColorVariant }) {
                   editor
                     ?.chain()
                     .focus()
-                    .toggleFgColor(color as AnsiColor)
+                    .toggleFgColor(color as AnsiColor, variant)
                     .run();
                 }}
               >
@@ -115,7 +129,7 @@ function ColorSection({ variant }: { variant: AnsiColorVariant }) {
                   editor
                     ?.chain()
                     .focus()
-                    .toggleBgColor(color as AnsiColor)
+                    .toggleBgColor(color as AnsiColor, variant)
                     .run();
                 }}
               >
@@ -132,19 +146,20 @@ function ColorSection({ variant }: { variant: AnsiColorVariant }) {
 function Section({
   title,
   children,
+  border,
 }: {
-  title: string;
+  title?: string;
   children: React.ReactNode;
+  border?: boolean;
 }) {
   return (
-    <>
-      <div>
+    <div className={border ? "border-b border-b-gray-600 pb-6" : ""}>
+      {title && (
         <h3 className="mb-3 text-xs uppercase tracking-widest text-teal-400">
           {title}
         </h3>
-        <div>{children}</div>
-      </div>
-      <hr className="text-gray-700" />
-    </>
+      )}
+      <div className="flex flex-col gap-6">{children}</div>
+    </div>
   );
 }
