@@ -1,13 +1,22 @@
 import { create } from "zustand";
 import {
-  THEME_MACOS_TERMINAL_APP,
+  DEFAULT_THEME,
+  PRESET_THEMES,
   type ActiveTheme,
   type AnsiColorVariant,
+  type ThemeName,
 } from "../lib/themes";
-import type { AnsiColor } from "../lib/color";
+import {
+  BACKGROUND_COLOR_CSS_VAR,
+  getColorCssVar,
+  setColorVariables,
+  type AnsiColor,
+} from "../lib/color";
 
 type ThemeState = {
   theme: ActiveTheme;
+  selectedTheme: ThemeName;
+  selectTheme: (name: ThemeName) => void;
   setBackgroundColor: (color: string) => void;
   setAnsiColor: (
     color: AnsiColor,
@@ -17,22 +26,44 @@ type ThemeState = {
 };
 
 export const useTheme = create<ThemeState>((set) => ({
-  theme: THEME_MACOS_TERMINAL_APP,
-  setBackgroundColor: (newValue: string) =>
+  selectedTheme: DEFAULT_THEME.name,
+  selectTheme: (name: ThemeName) => {
+    if (name === "Custom") {
+      set({ selectedTheme: name });
+      return;
+    }
+    const theme = PRESET_THEMES[name];
+    set({ theme, selectedTheme: name });
+    setColorVariables(theme);
+  },
+  theme: DEFAULT_THEME,
+  setBackgroundColor: (newValue: string) => {
     set((state) => ({
       ...state,
+      selectedTheme: "Custom",
       colors: { ...state.theme.colors, background: newValue },
-    })),
+    }));
+    document.documentElement.style.setProperty(
+      BACKGROUND_COLOR_CSS_VAR,
+      newValue,
+    );
+  },
   setAnsiColor: (
     color: AnsiColor,
     variant: AnsiColorVariant,
     newValue: string,
-  ) =>
+  ) => {
     set((state) => ({
       ...state,
+      selectedTheme: "Custom",
       colors: {
         ...state.theme.colors,
         [variant]: { ...state.theme.colors[variant], [color]: newValue },
       },
-    })),
+    }));
+    document.documentElement.style.setProperty(
+      getColorCssVar(color as AnsiColor, variant),
+      newValue,
+    );
+  },
 }));

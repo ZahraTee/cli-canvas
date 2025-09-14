@@ -1,13 +1,12 @@
 import { useCurrentEditor } from "@tiptap/react";
 import React from "react";
 import {
-  BACKGROUND_COLOR_CSS_VAR,
-  getColorCssVar,
   type AnsiColor,
   getAnsiColorLabel,
   type AnsiColorVariant,
 } from "../lib/color";
 import { useTheme } from "../stores/theme";
+import { PRESET_THEMES, type PresetThemeName } from "../lib/themes";
 
 export function SidePanel({
   onClickResetContent,
@@ -18,7 +17,7 @@ export function SidePanel({
     <menu className="flex flex-col items-center w-[400px] min-w-[280px] px-3 py-6 overflow-y-auto border-l border-l-gray-700">
       <div className="flex-1 flex flex-col gap-4">
         <FormattingSection />
-        <ColorSection />
+        <ThemeSection />
       </div>
       <div className="flex flex-0 mt-4 gap-2">
         <button className="btn btn-sm btn-error" onClick={onClickResetContent}>
@@ -51,13 +50,28 @@ function FormattingSection() {
   );
 }
 
-function ColorSection() {
+function ThemeSection() {
   const {
     theme: { colors },
+    selectedTheme,
+    selectTheme,
     setBackgroundColor,
   } = useTheme();
   return (
     <Section>
+      <select
+        value={selectedTheme}
+        onChange={(e) =>
+          selectTheme(e.target.value as PresetThemeName | "Custom")
+        }
+        className="select"
+      >
+        {Object.keys(PRESET_THEMES)
+          .concat("Custom")
+          .map((name) => (
+            <option key={name}>{name}</option>
+          ))}
+      </select>
       <div className="flex justify-between items-center">
         <span className="text-sm">Background</span>
         <input
@@ -65,10 +79,6 @@ function ColorSection() {
           value={colors.background}
           onChange={(e) => {
             setBackgroundColor(e.target.value);
-            document.documentElement.style.setProperty(
-              BACKGROUND_COLOR_CSS_VAR,
-              e.target.value,
-            );
           }}
         />
       </div>
@@ -103,10 +113,6 @@ function ColorVariantControls({ variant }: { variant: AnsiColorVariant }) {
                   color as AnsiColor,
                   variant,
                   e.target.value as string,
-                );
-                document.documentElement.style.setProperty(
-                  getColorCssVar(color as AnsiColor, variant),
-                  e.target.value,
                 );
               }}
             />
