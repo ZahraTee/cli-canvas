@@ -21,7 +21,7 @@ export function SidePanel({
       </div>
       <div className="flex flex-0 mt-4 gap-2">
         <button className="btn btn-sm btn-error" onClick={onClickResetContent}>
-          Reset to default
+          Reset content
         </button>
       </div>
     </menu>
