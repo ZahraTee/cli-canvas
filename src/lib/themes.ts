@@ -6,7 +6,7 @@ export type Theme = {
 
 type PresetTheme = { name: PresetThemeName } & Theme;
 
-type ColorPalette = { background: string } & Record<
+type ColorPalette = { background: string; foreground: string } & Record<
   AnsiColorVariant,
   AnsiColorMappings
 >;
@@ -20,6 +20,7 @@ export const THEME_MACOS_TERMINAL_APP: PresetTheme = {
   name: "Terminal.app",
   colors: {
     background: "#171717",
+    foreground: "#ffffff",
     standard: {
       black: "#000000",
       red: "#990000",
@@ -43,12 +44,11 @@ export const THEME_MACOS_TERMINAL_APP: PresetTheme = {
   },
 };
 
-
-
 export const THEME_GHOSTTY_DEFAULT_THEME_STYLEDARK: PresetTheme = {
   name: "Ghostty Default",
   colors: {
     background: "#292c33",
+    foreground: "#ffffff",
     standard: {
       black: "#1d1f21",
       red: "#990000",

@@ -56,6 +56,7 @@ function ThemeSection() {
     selectedTheme,
     selectTheme,
     setBackgroundColor,
+    setForegroundColor,
   } = useTheme();
   return (
     <Section>
@@ -79,6 +80,16 @@ function ThemeSection() {
           value={colors.background}
           onChange={(e) => {
             setBackgroundColor(e.target.value);
+          }}
+        />
+      </div>
+      <div className="flex justify-between items-center">
+        <span className="text-sm">Foreground</span>
+        <input
+          type="color"
+          value={colors.foreground}
+          onChange={(e) => {
+            setForegroundColor(e.target.value);
           }}
         />
       </div>

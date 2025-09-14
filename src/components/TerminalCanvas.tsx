@@ -1,6 +1,9 @@
 import { EditorContent, useCurrentEditor } from "@tiptap/react";
 import React from "react";
-import { BACKGROUND_COLOR_CSS_VAR } from "../lib/color";
+import {
+  BACKGROUND_COLOR_CSS_VAR,
+  FOREGROUND_COLOR_CSS_VAR,
+} from "../lib/color";
 
 export const TerminalCanvas = React.forwardRef<HTMLDivElement>(
   function TerminalCanvas(_, canvasRef) {
@@ -10,7 +13,10 @@ export const TerminalCanvas = React.forwardRef<HTMLDivElement>(
       <div className="overflow-y-auto w-full min-w-50 min-h-100 p-12">
         <div
           className="terminal mockup-code px-2 pb-2 "
-          style={{ backgroundColor: `var(${BACKGROUND_COLOR_CSS_VAR})` }}
+          style={{
+            backgroundColor: `var(${BACKGROUND_COLOR_CSS_VAR})`,
+            color: `var(${FOREGROUND_COLOR_CSS_VAR})`,
+          }}
         >
           <EditorContent
             ref={canvasRef}

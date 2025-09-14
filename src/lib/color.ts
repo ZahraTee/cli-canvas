@@ -1,6 +1,7 @@
 import { DEFAULT_THEME, type Theme } from "./themes";
 
 export const BACKGROUND_COLOR_CSS_VAR = "--terminal-bg-color";
+export const FOREGROUND_COLOR_CSS_VAR = "--terminal-fg-color";
 
 export const ANSI_COLORS = [
   "black",
@@ -44,8 +45,9 @@ export function initializeColorVariables(theme: Theme = DEFAULT_THEME) {
   const sheet = document.styleSheets[0];
 
   root.style.setProperty(BACKGROUND_COLOR_CSS_VAR, theme.colors.background);
+  root.style.setProperty(FOREGROUND_COLOR_CSS_VAR, theme.colors.foreground);
   sheet.insertRule(
-    `.terminal { background-color: var(${BACKGROUND_COLOR_CSS_VAR}); }`,
+    `.terminal { background-color: var(${BACKGROUND_COLOR_CSS_VAR}); color: var(${FOREGROUND_COLOR_CSS_VAR}); }`,
   );
 
   for (const variant of ANSI_COLOR_VARIANTS) {
@@ -65,6 +67,7 @@ export function setColorVariables(theme: Theme) {
   const root = document.documentElement;
 
   root.style.setProperty(BACKGROUND_COLOR_CSS_VAR, theme.colors.background);
+  root.style.setProperty(FOREGROUND_COLOR_CSS_VAR, theme.colors.foreground);
 
   for (const variant of ANSI_COLOR_VARIANTS) {
     for (const color of ANSI_COLORS) {

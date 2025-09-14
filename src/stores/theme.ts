@@ -8,6 +8,7 @@ import {
 } from "../lib/themes";
 import {
   BACKGROUND_COLOR_CSS_VAR,
+  FOREGROUND_COLOR_CSS_VAR,
   getColorCssVar,
   setColorVariables,
   type AnsiColor,
@@ -18,6 +19,7 @@ type ThemeState = {
   selectedTheme: ThemeName;
   selectTheme: (name: ThemeName) => void;
   setBackgroundColor: (color: string) => void;
+  setForegroundColor: (color: string) => void;
   setAnsiColor: (
     color: AnsiColor,
     variant: AnsiColorVariant,
@@ -45,6 +47,17 @@ export const useTheme = create<ThemeState>((set) => ({
     }));
     document.documentElement.style.setProperty(
       BACKGROUND_COLOR_CSS_VAR,
+      newValue,
+    );
+  },
+  setForegroundColor: (newValue: string) => {
+    set((state) => ({
+      ...state,
+      selectedTheme: "Custom",
+      colors: { ...state.theme.colors, foreground: newValue },
+    }));
+    document.documentElement.style.setProperty(
+      FOREGROUND_COLOR_CSS_VAR,
       newValue,
     );
   },
