@@ -17,6 +17,7 @@ import {
 import { PRESET_THEMES, type PresetThemeName } from "../lib/themes";
 import { useTheme } from "../stores/theme";
 import { Bold, Underline } from "lucide-react";
+import { Label } from "@/components/ui/label";
 
 export function SidePanel({
   onClickResetContent,
@@ -97,8 +98,11 @@ function ThemeSection() {
         </Select>
       </div>
       <div className="flex justify-between items-center">
-        <span className="text-sm">Background</span>
+        <Label className="text-sm" htmlFor="background">
+          Background
+        </Label>
         <input
+          id="background"
           type="color"
           value={colors.background}
           onChange={(e) => {
@@ -107,8 +111,11 @@ function ThemeSection() {
         />
       </div>
       <div className="flex justify-between items-center">
-        <span className="text-sm">Foreground</span>
+        <Label className="text-sm" htmlFor="foreground">
+          Foreground
+        </Label>
         <input
+          id="foreground"
           type="color"
           value={colors.foreground}
           onChange={(e) => {
@@ -136,10 +143,11 @@ function ColorVariantControls({ variant }: { variant: AnsiColorVariant }) {
       <div className="grid grid-cols-[auto_1fr_auto] gap-y-2 gap-x-5 items-center">
         {Object.entries(ansiColorMappings).map(([color, value]) => (
           <React.Fragment key={color}>
-            <span className="text-sm">
+            <Label className="text-sm" htmlFor={`${color}-${variant}`}>
               {getAnsiColorLabel(color as AnsiColor)}
-            </span>
+            </Label>
             <input
+              id={`${color}-${variant}`}
               type="color"
               className="justify-self-center"
               value={value}
