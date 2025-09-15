@@ -1,12 +1,22 @@
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { useCurrentEditor } from "@tiptap/react";
 import React, { useEffect, useRef } from "react";
 import {
-  type AnsiColor,
   getAnsiColorLabel,
+  type AnsiColor,
   type AnsiColorVariant,
 } from "../lib/color";
-import { useTheme } from "../stores/theme";
 import { PRESET_THEMES, type PresetThemeName } from "../lib/themes";
+import { useTheme } from "../stores/theme";
+import { Bold, Underline } from "lucide-react";
 
 export function SidePanel({
   onClickResetContent,
@@ -14,15 +24,17 @@ export function SidePanel({
   onClickResetContent: () => void;
 }) {
   return (
-    <menu className="flex flex-col items-center w-[400px] min-w-[280px] px-3 py-6 overflow-y-auto border-l border-l-gray-300 dark:border-l-gray-600">
+    <menu className="flex flex-col items-center w-[400px] min-w-[280px] px-3 py-6 overflow-y-auto border-l border-l-gray-200 dark:border-l-gray-800">
       <div className="w-full flex-1 flex flex-col gap-4 px-3">
         <FormattingSection />
+        <Separator />
         <ThemeSection />
       </div>
-      <div className="flex flex-0 mt-4 gap-2">
-        <button className="btn btn-sm btn-error" onClick={onClickResetContent}>
+      <div className="flex-0 flex flex-col w-full mt-4 gap-2">
+        <Separator />
+        <Button variant="destructive" onClick={onClickResetContent}>
           Reset content
-        </button>
+        </Button>
       </div>
     </menu>
   );
@@ -31,20 +43,23 @@ export function SidePanel({
 function FormattingSection() {
   const { editor } = useCurrentEditor();
   return (
-    <Section title="Text Formatting" border>
+    <Section title="Text Formatting">
       <div className="flex gap-2">
-        <button
-          className="btn btn-sm"
+        <Button
+          size="icon"
+          variant="outline"
           onClick={() => editor?.chain().focus().toggleBold().run()}
         >
-          Bold
-        </button>
-        <button
+          <Bold />
+        </Button>
+        <Button
+          size="icon"
+          variant="outline"
           className="btn btn-sm"
           onClick={() => editor?.chain().focus().toggleUnderline().run()}
         >
-          Underline
-        </button>
+          <Underline />
+        </Button>
       </div>
     </Section>
   );
@@ -60,19 +75,27 @@ function ThemeSection() {
   } = useTheme();
   return (
     <Section>
-      <select
-        value={selectedTheme}
-        onChange={(e) =>
-          selectTheme(e.target.value as PresetThemeName | "Custom")
-        }
-        className="select"
-      >
-        {Object.keys(PRESET_THEMES)
-          .concat("Custom")
-          .map((name) => (
-            <option key={name}>{name}</option>
-          ))}
-      </select>
+      <div className="flex">
+        <Select
+          value={selectedTheme}
+          onValueChange={(value) =>
+            selectTheme(value as PresetThemeName | "Custom")
+          }
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Theme" />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.keys(PRESET_THEMES)
+              .concat("Custom")
+              .map((name) => (
+                <SelectItem key={name} value={name}>
+                  {name}
+                </SelectItem>
+              ))}
+          </SelectContent>
+        </Select>
+      </div>
       <div className="flex justify-between items-center">
         <span className="text-sm">Background</span>
         <input
@@ -93,7 +116,7 @@ function ThemeSection() {
           }}
         />
       </div>
-      <Section border>
+      <Section>
         <ColorVariantControls variant="standard" />
         <ColorVariantControls variant="intense" />
       </Section>
@@ -129,8 +152,9 @@ function ColorVariantControls({ variant }: { variant: AnsiColorVariant }) {
               }}
             />
             <div className="flex gap-1">
-              <button
-                className="btn btn-sm "
+              <Button
+                size="sm"
+                variant="outline"
                 onClick={() => {
                   editor
                     ?.chain()
@@ -140,9 +164,10 @@ function ColorVariantControls({ variant }: { variant: AnsiColorVariant }) {
                 }}
               >
                 FG
-              </button>
-              <button
-                className="btn btn-sm "
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
                 onClick={() => {
                   editor
                     ?.chain()
@@ -152,7 +177,7 @@ function ColorVariantControls({ variant }: { variant: AnsiColorVariant }) {
                 }}
               >
                 BG
-              </button>
+              </Button>
             </div>
           </React.Fragment>
         ))}
@@ -164,11 +189,9 @@ function ColorVariantControls({ variant }: { variant: AnsiColorVariant }) {
 function Section({
   title,
   children,
-  border,
 }: {
   title?: string;
   children: React.ReactNode;
-  border?: boolean;
 }) {
   const detailsRef = useRef<HTMLDetailsElement | null>(null);
 
@@ -178,22 +201,16 @@ function Section({
     }
   }, []);
 
-  const outerClassName = border
-    ? "w-full border-b border-b-gray-300 dark:border-b-gray-600 pb-3 group"
-    : "group w-full";
-
   if (!title) {
-    return (
-      <div className={`${outerClassName} flex flex-col gap-4`}>{children}</div>
-    );
+    return <div className="w-full flex flex-col gap-3">{children}</div>;
   }
 
   return (
-    <details ref={detailsRef} className={outerClassName}>
+    <details ref={detailsRef} className="w-full">
       <summary className="flex justify-between text-xs uppercase tracking-widest  dark:text-indigo-300 text-indigo-700 py-1 marker:content-[''] group-open:after:content-['-'] after:content-['+']">
         {title}
       </summary>
-      <div className="flex flex-col gap-5 mt-3">{children}</div>
+      <div className="flex flex-col gap-3 mt-2">{children}</div>
     </details>
   );
 }

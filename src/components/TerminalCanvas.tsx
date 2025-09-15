@@ -12,12 +12,13 @@ export const TerminalCanvas = React.forwardRef<HTMLDivElement>(
     return (
       <div className="overflow-y-auto w-full min-w-50 min-h-100 p-12">
         <div
-          className="terminal mockup-code px-2 pb-2 "
+          className="terminal rounded-md"
           style={{
             backgroundColor: `var(${BACKGROUND_COLOR_CSS_VAR})`,
             color: `var(${FOREGROUND_COLOR_CSS_VAR})`,
           }}
         >
+          <div className="rounded-md" />
           <EditorContent
             ref={canvasRef}
             className="canvas w-full caret-accent"

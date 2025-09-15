@@ -3,6 +3,7 @@ import domToImage from "dom-to-image";
 import { useEffect, useMemo, useRef } from "react";
 import { SidePanel } from "./components/SidePanel";
 import { TerminalCanvas } from "./components/TerminalCanvas";
+import { ThemeProvider } from "./components/ThemeProvider";
 import { Toolbar } from "./components/Toolbar";
 import { initializeColorVariables } from "./lib/color";
 import { DEFAULT_CONTENT, textToEditorContent } from "./lib/tiptap/content";
@@ -40,14 +41,16 @@ export default function App() {
   };
 
   return (
-    <EditorContext.Provider value={editorContext}>
-      <main className="flex flex-col column w-full h-full items-center font-mono">
-        <Toolbar onClickDownload={onClickDownload} />
-        <section className="flex h-full w-full flex-1 overflow-hidden">
-          <TerminalCanvas ref={canvasRef} />
-          <SidePanel onClickResetContent={resetEditorContent} />
-        </section>
-      </main>
-    </EditorContext.Provider>
+    <ThemeProvider defaultTheme="dark" storageKey="mocli:ui-theme">
+      <EditorContext.Provider value={editorContext}>
+        <main className="flex flex-col column w-full h-full items-center font-mono">
+          <Toolbar onClickDownload={onClickDownload} />
+          <section className="flex h-full w-full flex-1 overflow-hidden">
+            <TerminalCanvas ref={canvasRef} />
+            <SidePanel onClickResetContent={resetEditorContent} />
+          </section>
+        </main>
+      </EditorContext.Provider>
+    </ThemeProvider>
   );
 }
