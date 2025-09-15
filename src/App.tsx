@@ -35,7 +35,7 @@ export default function App() {
 
     const dataUrl = await domToImage.toPng(terminalNode);
     const downloadLink = document.createElement("a");
-    downloadLink.download = "cli-canvas.png";
+    downloadLink.download = `mocli-export.png`;
     downloadLink.href = dataUrl;
     downloadLink.click();
   };
