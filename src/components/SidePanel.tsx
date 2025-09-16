@@ -76,7 +76,8 @@ function ThemeSection() {
   } = useTheme();
   return (
     <Section>
-      <div className="flex">
+      <div className="flex gap-2 justify-between items-center">
+        <span className="text-sm">Theme</span>
         <Select
           value={selectedTheme}
           onValueChange={(value) =>
