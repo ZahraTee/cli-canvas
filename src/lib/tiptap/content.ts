@@ -9,10 +9,12 @@ export const DEFAULT_CONTENT = `
 
   *=========================================*
   │                                         │
-  │          ~ Welcome to mo_cli ~           │
+  │          ~ Welcome to mo_cli ~          │
   │                                         │
-  │       You can edit this text and        │
-  |           adjust the theme!             │
+  │      You can use mo_cli to quickly      │
+  │    mock up terminal UIs or ascii art,   │
+  │     preview them in various themes,     │
+  │       and export images to share!       │
   │                                         │
   *=========================================*
 
