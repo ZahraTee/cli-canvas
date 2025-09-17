@@ -1,33 +1,34 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-type Theme = "dark" | "light" | "system";
+export type SiteTheme = "dark" | "light" | "system";
 
-type ThemeProviderProps = {
+type SiteThemeProviderProps = {
   children: React.ReactNode;
-  defaultTheme?: Theme;
+  defaultTheme?: SiteTheme;
   storageKey?: string;
 };
 
-type ThemeProviderState = {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
+type SiteThemeProviderState = {
+  theme: SiteTheme;
+  setTheme: (theme: SiteTheme) => void;
 };
 
-const initialState: ThemeProviderState = {
+const initialState: SiteThemeProviderState = {
   theme: "system",
   setTheme: () => null,
 };
 
-const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
+const SiteThemeProviderContext =
+  createContext<SiteThemeProviderState>(initialState);
 
-export function ThemeProvider({
+export function SiteThemeProvider({
   children,
   defaultTheme = "system",
   storageKey = "vite-ui-theme",
   ...props
-}: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme,
+}: SiteThemeProviderProps) {
+  const [theme, setTheme] = useState<SiteTheme>(
+    () => (localStorage.getItem(storageKey) as SiteTheme) || defaultTheme,
   );
 
   useEffect(() => {
@@ -50,21 +51,21 @@ export function ThemeProvider({
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
+    setTheme: (theme: SiteTheme) => {
       localStorage.setItem(storageKey, theme);
       setTheme(theme);
     },
   };
 
   return (
-    <ThemeProviderContext.Provider {...props} value={value}>
+    <SiteThemeProviderContext.Provider {...props} value={value}>
       {children}
-    </ThemeProviderContext.Provider>
+    </SiteThemeProviderContext.Provider>
   );
 }
 
-export const useTheme = () => {
-  const context = useContext(ThemeProviderContext);
+export const useSiteTheme = () => {
+  const context = useContext(SiteThemeProviderContext);
 
   if (context === undefined)
     throw new Error("useTheme must be used within a ThemeProvider");
