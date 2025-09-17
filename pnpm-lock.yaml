@@ -56,6 +56,9 @@ importers:
       '@tiptap/extension-underline':
         specifier: ^3.3.0
         version: 3.3.0(@tiptap/core@3.3.0(@tiptap/pm@3.3.0))
+      '@tiptap/extensions':
+        specifier: ^3.4.4
+        version: 3.4.4(@tiptap/core@3.3.0(@tiptap/pm@3.3.0))(@tiptap/pm@3.3.0)
       '@tiptap/pm':
         specifier: ^3.3.0
         version: 3.3.0
@@ -86,6 +89,9 @@ importers:
       tailwindcss:
         specifier: ^4.1.12
         version: 4.1.12
+      undo-redo:
+        specifier: link:@tiptap/extensions/undo-redo
+        version: link:@tiptap/extensions/undo-redo
       zustand:
         specifier: ^5.0.8
         version: 5.0.8(@types/react@19.1.12)(react@19.1.1)(use-sync-external-store@1.5.0(react@19.1.1))
@@ -1085,6 +1091,12 @@ packages:
     resolution: {integrity: sha512-ipiXsXBxmIQGqcMOaXsnP7iQ6/VO/UIxP3X3rS4ToHgVVF5RIFSs732fv5p3R88TdlVz4hqM9S39W+JesFB2Fw==}
     peerDependencies:
       '@tiptap/core': ^3.3.0
+
+  '@tiptap/extensions@3.4.4':
+    resolution: {integrity: sha512-J/6WCas1OkIVnGVc50YuUrS94E8jqbDPS3tdhYJ6GTCNSALea/ycPle/5i0ZxDOd1zGoRxcENl3CUP4z/K/+sg==}
+    peerDependencies:
+      '@tiptap/core': ^3.4.4
+      '@tiptap/pm': ^3.4.4
 
   '@tiptap/pm@3.3.0':
     resolution: {integrity: sha512-uKsysdjP5kQbQRQN8YinN5lr71TVgsHKhxgkq/psXZzNoUh2fPoNpzkhZTaondgr0IXFwzYX+DA5cLkzu4ig/A==}
@@ -2866,6 +2878,11 @@ snapshots:
   '@tiptap/extension-underline@3.3.0(@tiptap/core@3.3.0(@tiptap/pm@3.3.0))':
     dependencies:
       '@tiptap/core': 3.3.0(@tiptap/pm@3.3.0)
+
+  '@tiptap/extensions@3.4.4(@tiptap/core@3.3.0(@tiptap/pm@3.3.0))(@tiptap/pm@3.3.0)':
+    dependencies:
+      '@tiptap/core': 3.3.0(@tiptap/pm@3.3.0)
+      '@tiptap/pm': 3.3.0
 
   '@tiptap/pm@3.3.0':
     dependencies:

@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { useCurrentEditor } from "@tiptap/react";
+import { useCurrentEditor, useEditorState } from "@tiptap/react";
 import React, { useEffect, useRef } from "react";
 import {
   getAnsiColorLabel,
@@ -16,7 +16,7 @@ import {
 } from "../lib/color";
 import { PRESET_THEMES, type PresetThemeName } from "../lib/themes";
 import { useTheme } from "../stores/theme";
-import { Bold, Underline } from "lucide-react";
+import { Bold, Plus, Redo, Underline, Undo } from "lucide-react";
 import { Label } from "@/components/ui/label";
 
 export function SidePanel({
@@ -27,6 +27,7 @@ export function SidePanel({
   return (
     <menu className="flex flex-col items-center w-[400px] min-w-[280px] px-3 py-6 overflow-y-auto border-l border-l-gray-200 dark:border-l-gray-800">
       <div className="w-full flex-1 flex flex-col gap-4 px-3">
+        <ActionsSection />
         <FormattingSection />
         <Separator />
         <ThemeSection />
@@ -60,6 +61,46 @@ function FormattingSection() {
           onClick={() => editor?.chain().focus().toggleUnderline().run()}
         >
           <Underline />
+        </Button>
+      </div>
+    </Section>
+  );
+}
+
+function ActionsSection() {
+  const { editor } = useCurrentEditor();
+  const editorState = useEditorState({
+    editor,
+    selector: (ctx) => {
+      return {
+        canUndo: ctx.editor?.can().chain().focus().undo().run(),
+        canRedo: ctx.editor?.can().chain().focus().redo().run(),
+      };
+    },
+  });
+
+  return (
+    <Section title="Actions">
+      <div className="flex gap-2">
+        <Button
+          size="icon"
+          variant="outline"
+          className="btn btn-sm"
+          onClick={() => editor?.commands.undo()}
+          disabled={!editorState?.canUndo}
+          aria-label="Undo"
+        >
+          <Undo />
+        </Button>
+        <Button
+          size="icon"
+          variant="outline"
+          className="btn btn-sm"
+          onClick={() => editor?.commands.redo()}
+          disabled={!editorState?.canRedo}
+          aria-label="Redo"
+        >
+          <Redo />
         </Button>
       </div>
     </Section>

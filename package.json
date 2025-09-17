@@ -26,6 +26,7 @@
     "@tiptap/extension-text": "^3.3.0",
     "@tiptap/extension-text-style": "^3.3.0",
     "@tiptap/extension-underline": "^3.3.0",
+    "@tiptap/extensions": "^3.4.4",
     "@tiptap/pm": "^3.3.0",
     "@tiptap/react": "^3.3.0",
     "class-variance-authority": "^0.7.1",
@@ -36,6 +37,7 @@
     "react-dom": "^19.1.1",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.12",
+    "undo-redo": "link:@tiptap/extensions/undo-redo",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
