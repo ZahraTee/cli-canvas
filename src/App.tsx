@@ -2,10 +2,11 @@ import { EditorContext, useEditor } from "@tiptap/react";
 import domToImage from "dom-to-image";
 import { useEffect, useMemo, useRef } from "react";
 import { SidePanel } from "./components/SidePanel";
-import { TerminalCanvas } from "./components/TerminalCanvas";
 import { SiteThemeProvider } from "./components/SiteThemeProvider";
+import { TerminalCanvas } from "./components/TerminalCanvas";
 import { Toolbar } from "./components/Toolbar";
 import { initializeColorVariables } from "./lib/color";
+import { initializeFontVariables } from "./lib/font";
 import { DEFAULT_CONTENT, textToEditorContent } from "./lib/tiptap/content";
 import { extensions } from "./lib/tiptap/extensions";
 import "./styles.css";
@@ -13,7 +14,10 @@ import "./styles.css";
 export default function App() {
   const canvasRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(initializeColorVariables, []);
+  useEffect(() => {
+    initializeColorVariables();
+    initializeFontVariables();
+  }, []);
 
   const editor = useEditor({
     extensions,
@@ -27,7 +31,7 @@ export default function App() {
   };
 
   const onClickDownload = async () => {
-    const terminalNode = canvasRef.current?.parentNode;
+    const terminalNode = canvasRef.current?.parentNode?.parentNode;
 
     if (!terminalNode) {
       return;
@@ -35,7 +39,7 @@ export default function App() {
 
     const dataUrl = await domToImage.toPng(terminalNode);
     const downloadLink = document.createElement("a");
-    downloadLink.download = `mocli-export.png`;
+    downloadLink.download = `mo_cli-export.png`;
     downloadLink.href = dataUrl;
     downloadLink.click();
   };

@@ -42,7 +42,7 @@ const TerminalChrome = () => {
       </div>
       <div className="w-full flex justify-center">
         <input
-          defaultValue="mocli"
+          defaultValue="mo_cli"
           className="font-sans text-stone-600 dark:text-stone-300 text-sm font-semibold text-center w-[calc(100%-148px)]"
         />
       </div>

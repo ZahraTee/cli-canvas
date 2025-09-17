@@ -9,7 +9,7 @@ export const DEFAULT_CONTENT = `
 
   *=========================================*
   │                                         │
-  │          ~ Welcome to Mocli ~           │
+  │          ~ Welcome to mo_cli ~           │
   │                                         │
   │       You can edit this text and        │
   |           adjust the theme!             │

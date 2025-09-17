@@ -16,8 +16,9 @@ import {
 } from "../lib/color";
 import { PRESET_THEMES, type PresetThemeName } from "../lib/themes";
 import { useTheme } from "../stores/theme";
-import { Bold, Plus, Redo, Underline, Undo } from "lucide-react";
+import { Bold, Minus, Plus, Redo, Underline, Undo } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { FONT_SIZE_CSS_VAR } from "@/lib/font";
 
 export function SidePanel({
   onClickResetContent,
@@ -79,6 +80,24 @@ function ActionsSection() {
     },
   });
 
+  const adjustFontSize = (cb: (currentSize: number) => number) => {
+    const root = document.documentElement;
+    const currentSizeStr = window
+      .getComputedStyle(root)
+      .getPropertyValue(FONT_SIZE_CSS_VAR)
+      .split("px")[0];
+    const currentSize = parseInt(currentSizeStr, 10);
+    root.style.setProperty(FONT_SIZE_CSS_VAR, `${cb(currentSize)}px`);
+  };
+
+  const increaseTerminalFontSize = () => {
+    adjustFontSize((size) => size + 1);
+  };
+
+  const reduceTerminalFontSize = () => {
+    adjustFontSize((size) => size - 1);
+  };
+
   return (
     <Section title="Actions">
       <div className="flex gap-2">
@@ -102,6 +121,24 @@ function ActionsSection() {
         >
           <Redo />
         </Button>
+        <Button
+          size="icon"
+          variant="outline"
+          className="btn btn-sm"
+          onClick={increaseTerminalFontSize}
+          aria-label="Increase font size"
+        >
+          <Plus />
+        </Button>
+        <Button
+          size="icon"
+          variant="outline"
+          className="btn btn-sm"
+          onClick={reduceTerminalFontSize}
+          aria-label="Reduce font size"
+        >
+          <Minus />
+        </Button>{" "}
       </div>
     </Section>
   );
