@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -7,8 +8,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { FONT_SIZE_CSS_VAR } from "@/lib/font";
 import { useCurrentEditor, useEditorState } from "@tiptap/react";
-import React, { useEffect, useRef } from "react";
+import { Bold, Minus, Plus, Redo, Underline, Undo } from "lucide-react";
+import React, { useState } from "react";
 import {
   getAnsiColorLabel,
   type AnsiColor,
@@ -16,9 +19,11 @@ import {
 } from "../lib/color";
 import { PRESET_THEMES, type PresetThemeName } from "../lib/themes";
 import { useTheme } from "../stores/theme";
-import { Bold, Minus, Plus, Redo, Underline, Undo } from "lucide-react";
-import { Label } from "@/components/ui/label";
-import { FONT_SIZE_CSS_VAR } from "@/lib/font";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "./ui/collapsible";
 
 export function SidePanel({
   onClickResetContent,
@@ -280,24 +285,29 @@ function Section({
   title?: string;
   children: React.ReactNode;
 }) {
-  const detailsRef = useRef<HTMLDetailsElement | null>(null);
-
-  useEffect(() => {
-    if (detailsRef.current) {
-      detailsRef.current.open = true;
-    }
-  }, []);
+  const [isOpen, setIsOpen] = useState(true);
 
   if (!title) {
     return <div className="w-full flex flex-col gap-3">{children}</div>;
   }
 
   return (
-    <details ref={detailsRef} className="w-full">
-      <summary className="flex justify-between text-xs uppercase tracking-widest  dark:text-indigo-300 text-indigo-700 py-1 marker:content-[''] group-open:after:content-['-'] after:content-['+']">
+    <Collapsible
+      className="w-full"
+      open={isOpen}
+      onOpenChange={() => setIsOpen(!isOpen)}
+    >
+      <div className="flex items-center justify-between text-xs uppercase tracking-widest  dark:text-indigo-300 text-indigo-700 py-1">
         {title}
-      </summary>
-      <div className="flex flex-col gap-3 mt-2">{children}</div>
-    </details>
+        <CollapsibleTrigger>
+          <Button size="icon-sm" variant="ghost">
+            {isOpen ? <Minus /> : <Plus />}
+          </Button>
+        </CollapsibleTrigger>
+      </div>
+      <CollapsibleContent className="flex flex-col gap-3 mt-2">
+        {children}
+      </CollapsibleContent>
+    </Collapsible>
   );
 }
