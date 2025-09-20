@@ -1,11 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { TabsContent } from "@/components/ui/tabs";
-import type { AnsiColor } from "@/lib/color";
+import {
+  BACKGROUND_COLOR_CSS_VAR,
+  FOREGROUND_COLOR_CSS_VAR,
+  type AnsiColor,
+  type AnsiColorVariant,
+} from "@/lib/color";
 import { FONT_SIZE_CSS_VAR } from "@/lib/font";
 import { useTheme } from "@/stores/theme";
 import { useCurrentEditor, useEditorState } from "@tiptap/react";
 import { Bold, Minus, Plus, Redo, Underline, Undo } from "lucide-react";
+import { useMemo } from "react";
 import { Section } from "./Section";
 
 export function ContentTab({
@@ -126,14 +132,13 @@ function ActionsSection() {
           aria-label="Reduce font size"
         >
           <Minus />
-        </Button>{" "}
+        </Button>
       </div>
     </Section>
   );
 }
 
 function ForegroundColorControls() {
-  const { editor } = useCurrentEditor();
   const {
     theme: { colors },
   } = useTheme();
@@ -141,56 +146,21 @@ function ForegroundColorControls() {
   return (
     <Section title="Foreground Colors">
       <div className="flex flex-wrap gap-2">
-        {Object.entries(standard).map(([name, value]) => (
-          <ColorFormattingButton
-            key={name}
-            colorValue={value}
-            onClick={() => {
-              editor
-                ?.chain()
-                .focus()
-                .toggleFgColor(name as AnsiColor, "standard")
-                .run();
-            }}
+        {Object.keys(standard).map((color) => (
+          <ForegroundColorButton
+            color={color as AnsiColor}
+            variant="standard"
           />
         ))}
-        {Object.entries(intense).map(([name, value]) => (
-          <ColorFormattingButton
-            key={name}
-            colorValue={value}
-            onClick={() => {
-              editor
-                ?.chain()
-                .focus()
-                .toggleFgColor(name as AnsiColor, "intense")
-                .run();
-            }}
-          />
+        {Object.keys(intense).map((color) => (
+          <ForegroundColorButton color={color as AnsiColor} variant="intense" />
         ))}
       </div>
     </Section>
   );
 }
 
-function ColorFormattingButton({
-  onClick,
-  colorValue,
-}: {
-  onClick: () => void;
-  colorValue: string;
-}) {
-  return (
-    <Button
-      size="icon-sm"
-      style={{ backgroundColor: colorValue }}
-      variant="outline"
-      onClick={onClick}
-    />
-  );
-}
-
 function BackgroundColorControls() {
-  const { editor } = useCurrentEditor();
   const {
     theme: { colors },
   } = useTheme();
@@ -198,33 +168,85 @@ function BackgroundColorControls() {
   return (
     <Section title="Background Colors">
       <div className="flex flex-wrap gap-2">
-        {Object.entries(standard).map(([name, value]) => (
-          <ColorFormattingButton
-            key={name}
-            colorValue={value}
-            onClick={() => {
-              editor
-                ?.chain()
-                .focus()
-                .toggleBgColor(name as AnsiColor, "standard")
-                .run();
-            }}
+        {Object.keys(standard).map((color) => (
+          <BackgroundColorButton
+            color={color as AnsiColor}
+            variant="standard"
           />
         ))}
-        {Object.entries(intense).map(([name, value]) => (
-          <ColorFormattingButton
-            key={name}
-            colorValue={value}
-            onClick={() => {
-              editor
-                ?.chain()
-                .focus()
-                .toggleBgColor(name as AnsiColor, "intense")
-                .run();
-            }}
-          />
+        {Object.keys(intense).map((color) => (
+          <BackgroundColorButton color={color as AnsiColor} variant="intense" />
         ))}
       </div>
     </Section>
+  );
+}
+
+function ForegroundColorButton({
+  color,
+  variant,
+}: {
+  color: AnsiColor;
+  variant: AnsiColorVariant;
+}) {
+  const { editor } = useCurrentEditor();
+  const { theme } = useTheme();
+
+  const onClick = () =>
+    editor?.chain().focus().toggleFgColor(color, variant).run();
+
+  return (
+    <ColorButton
+      label="FG"
+      onClick={onClick}
+      color={theme.colors[variant][color]}
+      backgroundColor={`var(${BACKGROUND_COLOR_CSS_VAR})`}
+    />
+  );
+}
+
+function BackgroundColorButton({
+  color,
+  variant,
+}: {
+  color: AnsiColor;
+  variant: AnsiColorVariant;
+}) {
+  const { editor } = useCurrentEditor();
+  const { theme } = useTheme();
+
+  const onClick = () =>
+    editor?.chain().focus().toggleBgColor(color, variant).run();
+
+  return (
+    <ColorButton
+      label="BG"
+      onClick={onClick}
+      color={`var(${FOREGROUND_COLOR_CSS_VAR})`}
+      backgroundColor={theme.colors[variant][color]}
+    />
+  );
+}
+
+function ColorButton({
+  label,
+  onClick,
+  color,
+  backgroundColor,
+}: {
+  label: string;
+  onClick: () => void;
+  color: string;
+  backgroundColor: string;
+}) {
+  const style = useMemo(
+    () => ({ color, backgroundColor }),
+    [color, backgroundColor],
+  );
+
+  return (
+    <Button size="icon-sm" style={style} variant="outline" onClick={onClick}>
+      {label}
+    </Button>
   );
 }
