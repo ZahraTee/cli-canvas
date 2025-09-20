@@ -1,7 +1,7 @@
 import { EditorContext, useEditor } from "@tiptap/react";
 import domToImage from "dom-to-image";
 import { useEffect, useMemo, useRef } from "react";
-import { SidePanel } from "./components/SidePanel";
+import { SidePanel } from "./components/SidePanel/SidePanel";
 import { SiteThemeProvider } from "./components/SiteThemeProvider";
 import { TerminalCanvas } from "./components/TerminalCanvas";
 import { Toolbar } from "./components/Toolbar";
