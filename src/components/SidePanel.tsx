@@ -36,7 +36,7 @@ export function SidePanel({
       <div className="flex-0 flex flex-col w-full mt-4 gap-2">
         <Separator />
         <Button variant="destructive" onClick={onClickResetContent}>
-          Reset content
+          Reset Content
         </Button>
       </div>
     </menu>

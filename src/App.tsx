@@ -30,16 +30,26 @@ export default function App() {
     editor.commands.setContent(textToEditorContent(DEFAULT_CONTENT));
   };
 
-  const onClickDownload = async () => {
+  const onClickDownload = async (format: "jpg" | "png" | "svg") => {
     const terminalNode = canvasRef.current?.parentNode?.parentNode;
 
     if (!terminalNode) {
       return;
     }
 
-    const dataUrl = await domToImage.toPng(terminalNode);
+    let dataUrl = "";
+
+    if (format === "jpg") {
+      dataUrl = await domToImage.toPng(terminalNode);
+    }
+    if (format === "png") {
+      dataUrl = await domToImage.toJpeg(terminalNode);
+    }
+    if (format === "svg") {
+      dataUrl = await domToImage.toSvg(terminalNode);
+    }
     const downloadLink = document.createElement("a");
-    downloadLink.download = `mo_cli-export.png`;
+    downloadLink.download = `mo_cli-export.${format}`;
     downloadLink.href = dataUrl;
     downloadLink.click();
   };
