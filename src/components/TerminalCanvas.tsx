@@ -1,5 +1,6 @@
 import { EditorContent, useCurrentEditor } from "@tiptap/react";
 import React from "react";
+import { Resizable } from "re-resizable";
 import {
   BACKGROUND_COLOR_CSS_VAR,
   FOREGROUND_COLOR_CSS_VAR,
@@ -10,23 +11,24 @@ export const TerminalCanvas = React.forwardRef<HTMLDivElement>(
     const { editor } = useCurrentEditor();
 
     return (
-      <div className="overflow-y-auto w-full min-w-50 p-12">
-        <div
-          className="terminal rounded-lg"
+      <div className="w-full p-12 flex justify-center items-center overflow-auto">
+        <Resizable
+          className="terminal flex flex-col rounded-lg rounded-b-lg outline outline-stone-300 dark:outline-stone-700 shadow-lg"
           style={{
             backgroundColor: `var(${BACKGROUND_COLOR_CSS_VAR})`,
             color: `var(${FOREGROUND_COLOR_CSS_VAR})`,
           }}
+          defaultSize={{
+            width: 700,
+          }}
         >
           <TerminalChrome />
-          <div className="min-h-100 relative rounded-b-lg border-x border-b border-stone-400 dark:border-stone-800 shadow-lg">
-            <EditorContent
-              ref={canvasRef}
-              className="w-full p-2"
-              editor={editor}
-            />
-          </div>
-        </div>
+          <EditorContent
+            ref={canvasRef}
+            className="overflow-auto w-full flex-1 p-1"
+            editor={editor}
+          />
+        </Resizable>
       </div>
     );
   },
@@ -34,11 +36,11 @@ export const TerminalCanvas = React.forwardRef<HTMLDivElement>(
 
 const TerminalChrome = () => {
   return (
-    <div className="relative top-[-0rem] w-full flex items-center justify-center h-[28px] rounded-t-lg bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-800">
+    <div className="relative w-full flex items-center justify-center h-[28px] rounded-t-lg bg-stone-100 dark:bg-stone-800 border-b border-stone-300 dark:border-stone-950">
       <div className="absolute left-2 flex gap-2">
-        <div className="size-[14px] border border-stone-200 dark:border-stone-800 rounded-4xl bg-red-400" />
-        <div className="size-[14px] border border-stone-200 dark:border-stone-800 rounded-4xl bg-amber-300" />
-        <div className="size-[14px] border border-stone-200 dark:border-stone-800 rounded-4xl bg-green-500" />
+        <div className="size-[14px] border border-stone-300 dark:border-stone-800 rounded-4xl bg-red-400" />
+        <div className="size-[14px] border border-stone-300 dark:border-stone-800 rounded-4xl bg-amber-300" />
+        <div className="size-[14px] border border-stone-300 dark:border-stone-800 rounded-4xl bg-green-500" />
       </div>
       <div className="w-full flex justify-center">
         <input

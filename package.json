@@ -33,6 +33,7 @@
     "clsx": "^2.1.1",
     "dom-to-image": "^2.6.0",
     "lucide-react": "^0.544.0",
+    "re-resizable": "^6.11.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "tailwind-merge": "^3.3.1",
