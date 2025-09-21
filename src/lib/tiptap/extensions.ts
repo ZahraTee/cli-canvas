@@ -8,6 +8,7 @@ import { AnsiBgColor } from "./custom-extensions/AnsiBgColor";
 import { AnsiBold } from "./custom-extensions/AnsiBold";
 import { AnsiFgColor } from "./custom-extensions/AnsiFgColor";
 import { AnsiUnderline } from "./custom-extensions/AnsiUnderline";
+import { AnsiPasteHandler } from "./custom-extensions/AnsiPasteHandler";
 
 const TerminalDocument = Document.extend({
   content: "codeBlock",
@@ -26,6 +27,7 @@ export const extensions = [
   TextStyle,
   AnsiFgColor,
   AnsiBgColor,
+  AnsiPasteHandler,
   // --------Functionality--------
   UndoRedo,
 ];
