@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/button";
+import domToImage from "dom-to-image";
+import { ChevronDown } from "lucide-react";
 import { ModeToggle } from "./ModeToggle";
 import {
   DropdownMenu,
@@ -6,13 +8,31 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
 
-export function Toolbar({
-  onClickDownload,
-}: {
-  onClickDownload: (format: "jpg" | "png" | "svg") => void;
-}) {
+export function Toolbar() {
+  const onClickDownload = async (format: "jpg" | "png" | "svg") => {
+    const terminalElement = document.getElementById("terminal");
+    if (!terminalElement) {
+      return;
+    }
+
+    let dataUrl = "";
+
+    if (format === "jpg") {
+      dataUrl = await domToImage.toPng(terminalElement);
+    }
+    if (format === "png") {
+      dataUrl = await domToImage.toJpeg(terminalElement);
+    }
+    if (format === "svg") {
+      dataUrl = await domToImage.toSvg(terminalElement);
+    }
+    const downloadLink = document.createElement("a");
+    downloadLink.download = `mo_cli-export.${format}`;
+    downloadLink.href = dataUrl;
+    downloadLink.click();
+  };
+
   return (
     <menu className="flex w-full min-h-fit items-center border-b border-b-gray-200 dark:border-b-gray-800 px-3 pl-5 py-2">
       <div className="flex-1 items-center">

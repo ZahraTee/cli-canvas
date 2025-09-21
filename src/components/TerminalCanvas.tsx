@@ -1,10 +1,10 @@
-import { EditorContent, useCurrentEditor } from "@tiptap/react";
-import React from "react";
-import { Resizable } from "re-resizable";
 import {
   BACKGROUND_COLOR_CSS_VAR,
   FOREGROUND_COLOR_CSS_VAR,
-} from "../lib/color";
+} from "@/lib/color";
+import { EditorContent, useCurrentEditor } from "@tiptap/react";
+import { Resizable } from "re-resizable";
+import React from "react";
 
 export const TerminalCanvas = React.forwardRef<HTMLDivElement>(
   function TerminalCanvas(_, canvasRef) {
@@ -13,21 +13,26 @@ export const TerminalCanvas = React.forwardRef<HTMLDivElement>(
     return (
       <div className="w-full p-12 flex justify-center items-center overflow-auto">
         <Resizable
-          className="terminal flex flex-col rounded-lg rounded-b-lg outline outline-stone-300 dark:outline-stone-700 shadow-lg"
-          style={{
-            backgroundColor: `var(${BACKGROUND_COLOR_CSS_VAR})`,
-            color: `var(${FOREGROUND_COLOR_CSS_VAR})`,
-          }}
+          className="rounded-lg shadow-lg"
           defaultSize={{
             width: 700,
           }}
         >
-          <TerminalChrome />
-          <EditorContent
-            ref={canvasRef}
-            className="overflow-auto w-full flex-1 p-1"
-            editor={editor}
-          />
+          <div
+            id="terminal"
+            style={{
+              backgroundColor: `var(${BACKGROUND_COLOR_CSS_VAR})`,
+              color: `var(${FOREGROUND_COLOR_CSS_VAR})`,
+            }}
+            className="flex flex-col max-h-full rounded-lg outline outline-stone-300 dark:outline-stone-700"
+          >
+            <TerminalChrome />
+            <EditorContent
+              ref={canvasRef}
+              className="overflow-auto w-full flex-1 p-1"
+              editor={editor}
+            />
+          </div>
         </Resizable>
       </div>
     );
