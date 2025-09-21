@@ -10,9 +10,14 @@
 
 .tiptap {
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    font-size: 14px;
 
     &:focus {
         outline: none;
+    }
+
+    pre {
+        text-wrap-mode: wrap;
     }
 
     .ansi-bold {
@@ -26,10 +31,6 @@
 *:has(> .tiptap):focus-within {
     border: 2px solid var(--color-gray-400);
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-}
-
-.tiptap pre {
-    text-wrap-mode: wrap;
 }
 
 @theme inline {
