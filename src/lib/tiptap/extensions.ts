@@ -1,9 +1,9 @@
 import Bold from "@tiptap/extension-bold";
-import { TextStyle } from "@tiptap/extension-text-style";
 import { CodeBlock } from "@tiptap/extension-code-block";
 import Document from "@tiptap/extension-document";
 import { Paragraph } from "@tiptap/extension-paragraph";
 import { Text } from "@tiptap/extension-text";
+import { TextStyle } from "@tiptap/extension-text-style";
 import { Underline } from "@tiptap/extension-underline";
 import { UndoRedo } from "@tiptap/extensions/undo-redo";
 import { Mark } from "@tiptap/core";
@@ -39,7 +39,97 @@ declare module "@tiptap/core" {
   }
 }
 
-export const FgColor = Mark.create({
+const AnsiBold = Bold.extend({
+  addOptions() {
+    return {
+      types: ["textStyle"],
+    };
+  },
+
+  addGlobalAttributes() {
+    return [
+      {
+        types: ["textStyle"],
+        attributes: {
+          bold: {
+            default: null,
+            renderHTML: (attributes) => {
+              return {
+                class: attributes.bold,
+              };
+            },
+            parseHTML: (element) => {
+              return {
+                bold: [...element.classList].includes("ansi-bold"),
+              };
+            },
+          },
+        },
+      },
+    ];
+  },
+
+  addCommands() {
+    return {
+      toggleBold:
+        () =>
+        ({ chain }) => {
+          return chain()
+            .toggleMark("textStyle", {
+              bold: "ansi-bold",
+            })
+            .run();
+        },
+    };
+  },
+});
+
+const AnsiUnderline = Underline.extend({
+  addOptions() {
+    return {
+      types: ["textStyle"],
+    };
+  },
+
+  addGlobalAttributes() {
+    return [
+      {
+        types: ["textStyle"],
+        attributes: {
+          underline: {
+            default: null,
+            renderHTML: (attributes) => {
+              return {
+                class: attributes.underline,
+              };
+            },
+            parseHTML: (element) => {
+              return {
+                underline: [...element.classList].includes("ansi-underline"),
+              };
+            },
+          },
+        },
+      },
+    ];
+  },
+
+  addCommands() {
+    return {
+      toggleUnderline:
+        () =>
+        ({ chain }) => {
+          return chain()
+            .toggleMark("textStyle", {
+              underline: "ansi-underline",
+            })
+            .run();
+        },
+    };
+  },
+});
+
+const FgColor = Mark.create({
   name: "fgColor",
 
   addOptions() {
@@ -179,8 +269,8 @@ export const extensions = [
   // By default CodeBlock disallows marks
   CodeBlock.extend({ marks: "_" }),
   // -------- Formatting --------
-  Bold,
-  Underline,
+  AnsiBold,
+  AnsiUnderline,
   TextStyle,
   FgColor,
   BgColor,
