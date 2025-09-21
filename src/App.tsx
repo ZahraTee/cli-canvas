@@ -6,8 +6,8 @@ import { SiteThemeProvider } from "./components/SiteThemeProvider";
 import { TerminalCanvas } from "./components/TerminalCanvas";
 import { Toolbar } from "./components/Toolbar";
 import { initializeColorVariables } from "./lib/color";
+import { getDefaultContent } from "./lib/content/default";
 import { initializeFontVariables } from "./lib/font";
-import { DEFAULT_CONTENT, textToEditorContent } from "./lib/tiptap/content";
 import { extensions } from "./lib/tiptap/extensions";
 import "./styles.css";
 
@@ -21,13 +21,13 @@ export default function App() {
 
   const editor = useEditor({
     extensions,
-    content: textToEditorContent(DEFAULT_CONTENT),
+    content: getDefaultContent(),
   });
 
   const editorContext = useMemo(() => ({ editor }), [editor]);
 
   const resetEditorContent = () => {
-    editor.commands.setContent(textToEditorContent(DEFAULT_CONTENT));
+    editor.commands.setContent(getDefaultContent());
   };
 
   const onClickDownload = async (format: "jpg" | "png" | "svg") => {
