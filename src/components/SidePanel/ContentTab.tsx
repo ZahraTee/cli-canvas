@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { TabsContent } from "@/components/ui/tabs";
 import {
-  BACKGROUND_COLOR_CSS_VAR,
-  FOREGROUND_COLOR_CSS_VAR,
+  getBgColorClassName,
+  getFgColorClassName,
   type AnsiColor,
   type AnsiColorVariant,
 } from "@/lib/color";
@@ -11,7 +11,6 @@ import { FONT_SIZE_CSS_VAR } from "@/lib/font";
 import { useTheme } from "@/stores/theme";
 import { useCurrentEditor, useEditorState } from "@tiptap/react";
 import { Bold, Minus, Plus, Redo, Underline, Undo } from "lucide-react";
-import { useMemo } from "react";
 import { Section } from "./Section";
 
 export function ContentTab({
@@ -190,7 +189,6 @@ function ForegroundColorButton({
   variant: AnsiColorVariant;
 }) {
   const { editor } = useCurrentEditor();
-  const { theme } = useTheme();
 
   const onClick = () =>
     editor?.chain().focus().toggleFgColor(color, variant).run();
@@ -199,8 +197,7 @@ function ForegroundColorButton({
     <ColorButton
       label="FG"
       onClick={onClick}
-      color={theme.colors[variant][color]}
-      backgroundColor={`var(${BACKGROUND_COLOR_CSS_VAR})`}
+      className={`bg-terminal-bg ${getFgColorClassName(color, variant)}`}
     />
   );
 }
@@ -213,7 +210,6 @@ function BackgroundColorButton({
   variant: AnsiColorVariant;
 }) {
   const { editor } = useCurrentEditor();
-  const { theme } = useTheme();
 
   const onClick = () =>
     editor?.chain().focus().toggleBgColor(color, variant).run();
@@ -222,8 +218,7 @@ function BackgroundColorButton({
     <ColorButton
       label="BG"
       onClick={onClick}
-      color={`var(${FOREGROUND_COLOR_CSS_VAR})`}
-      backgroundColor={theme.colors[variant][color]}
+      className={`color-terminal-fg ${getBgColorClassName(color, variant)}`}
     />
   );
 }
@@ -231,21 +226,19 @@ function BackgroundColorButton({
 function ColorButton({
   label,
   onClick,
-  color,
-  backgroundColor,
+  className,
 }: {
   label: string;
   onClick: () => void;
-  color: string;
-  backgroundColor: string;
+  className: string;
 }) {
-  const style = useMemo(
-    () => ({ color, backgroundColor }),
-    [color, backgroundColor],
-  );
-
   return (
-    <Button size="icon-sm" style={style} variant="outline" onClick={onClick}>
+    <Button
+      size="icon-sm"
+      className={className}
+      variant="outline"
+      onClick={onClick}
+    >
       {label}
     </Button>
   );

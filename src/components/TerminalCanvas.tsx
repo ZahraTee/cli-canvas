@@ -1,7 +1,3 @@
-import {
-  BACKGROUND_COLOR_CSS_VAR,
-  FOREGROUND_COLOR_CSS_VAR,
-} from "@/lib/color";
 import { EditorContent, useCurrentEditor } from "@tiptap/react";
 import { Resizable } from "re-resizable";
 import React from "react";
@@ -20,11 +16,7 @@ export const TerminalCanvas = React.forwardRef<HTMLDivElement>(
         >
           <div
             id="terminal"
-            style={{
-              backgroundColor: `var(${BACKGROUND_COLOR_CSS_VAR})`,
-              color: `var(${FOREGROUND_COLOR_CSS_VAR})`,
-            }}
-            className="flex flex-col max-h-full rounded-lg outline outline-stone-300 dark:outline-stone-700"
+            className="bg-terminal-bg text-terminal-fg flex flex-col max-h-full rounded-lg outline outline-stone-300 dark:outline-stone-700"
           >
             <TerminalChrome />
             <EditorContent

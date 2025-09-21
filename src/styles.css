@@ -33,6 +33,11 @@
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 
+@theme {
+    --color-terminal-bg: var(--terminal-bg-color);
+    --color-terminal-fg: var(--terminal-fg-color);
+}
+
 @theme inline {
     --radius-sm: calc(var(--radius) - 4px);
     --radius-md: calc(var(--radius) - 2px);
