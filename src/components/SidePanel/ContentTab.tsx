@@ -2,13 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { TabsContent } from "@/components/ui/tabs";
 import {
+  ANSI_COLORS,
   getBgColorClassName,
   getFgColorClassName,
   type AnsiColor,
   type AnsiColorVariant,
 } from "@/lib/color";
 import { FONT_SIZE_CSS_VAR } from "@/lib/font";
-import { useTheme } from "@/stores/theme";
 import { useCurrentEditor, useEditorState } from "@tiptap/react";
 import { Bold, Minus, Plus, Redo, Underline, Undo } from "lucide-react";
 import { Section } from "./Section";
@@ -138,20 +138,16 @@ function ActionsSection() {
 }
 
 function ForegroundColorControls() {
-  const {
-    theme: { colors },
-  } = useTheme();
-  const { standard, intense } = colors;
   return (
     <Section title="Foreground Colors">
       <div className="flex flex-wrap gap-2">
-        {Object.keys(standard).map((color) => (
+        {ANSI_COLORS.map((color) => (
           <ForegroundColorButton
             color={color as AnsiColor}
             variant="standard"
           />
         ))}
-        {Object.keys(intense).map((color) => (
+        {ANSI_COLORS.map((color) => (
           <ForegroundColorButton color={color as AnsiColor} variant="intense" />
         ))}
       </div>
@@ -160,20 +156,16 @@ function ForegroundColorControls() {
 }
 
 function BackgroundColorControls() {
-  const {
-    theme: { colors },
-  } = useTheme();
-  const { standard, intense } = colors;
   return (
     <Section title="Background Colors">
       <div className="flex flex-wrap gap-2">
-        {Object.keys(standard).map((color) => (
+        {ANSI_COLORS.map((color) => (
           <BackgroundColorButton
             color={color as AnsiColor}
             variant="standard"
           />
         ))}
-        {Object.keys(intense).map((color) => (
+        {ANSI_COLORS.map((color) => (
           <BackgroundColorButton color={color as AnsiColor} variant="intense" />
         ))}
       </div>

@@ -54,7 +54,10 @@ export const useTheme = create<ThemeState>((set) => ({
     set((state) => ({
       ...state,
       selectedTheme: "Custom",
-      colors: { ...state.theme.colors, foreground: newValue },
+      theme: {
+        ...state.theme,
+        colors: { ...state.theme.colors, foreground: newValue },
+      },
     }));
     document.documentElement.style.setProperty(
       FOREGROUND_COLOR_CSS_VAR,
@@ -66,14 +69,19 @@ export const useTheme = create<ThemeState>((set) => ({
     variant: AnsiColorVariant,
     newValue: string,
   ) => {
-    set((state) => ({
-      ...state,
-      selectedTheme: "Custom",
-      colors: {
-        ...state.theme.colors,
-        [variant]: { ...state.theme.colors[variant], [color]: newValue },
-      },
-    }));
+    set((state) => {
+      return {
+        ...state,
+        selectedTheme: "Custom",
+        theme: {
+          ...state.theme,
+          colors: {
+            ...state.theme.colors,
+            [variant]: { ...state.theme.colors[variant], [color]: newValue },
+          },
+        },
+      };
+    });
     document.documentElement.style.setProperty(
       getColorCssVar(color as AnsiColor, variant),
       newValue,

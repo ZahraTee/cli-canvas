@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/select";
 import { TabsContent } from "@/components/ui/tabs";
 import {
+  ANSI_COLORS,
   getAnsiColorLabel,
   type AnsiColor,
   type AnsiColorVariant,
@@ -83,35 +84,43 @@ export function ThemeTab() {
 }
 
 function ThemeColorControls({ variant }: { variant: AnsiColorVariant }) {
-  const {
-    theme: { colors },
-    setAnsiColor,
-  } = useTheme();
-  const ansiColorMappings = colors[variant];
   return (
     <Section title={`${variant} Colors`}>
       <div className="grid grid-cols-2 gap-y-2 gap-x-5 items-center w-full flex-wrap">
-        {Object.entries(ansiColorMappings).map(([color, value]) => (
+        {ANSI_COLORS.map((color) => (
           <div className="flex-1 flex justify-between" key={color}>
-            <Label className="text-sm" htmlFor={`${color}-${variant}`}>
-              {getAnsiColorLabel(color as AnsiColor)}
-            </Label>
-            <input
-              id={`${color}-${variant}`}
-              type="color"
-              className="justify-self-center w-10"
-              value={value}
-              onChange={(e) => {
-                setAnsiColor(
-                  color as AnsiColor,
-                  variant,
-                  e.target.value as string,
-                );
-              }}
-            />
+            <AnsiColorInput color={color as AnsiColor} variant={variant} />
           </div>
         ))}
       </div>
     </Section>
+  );
+}
+
+function AnsiColorInput({
+  color,
+  variant,
+}: {
+  color: AnsiColor;
+  variant: AnsiColorVariant;
+}) {
+  const value = useTheme((state) => state.theme.colors[variant][color]);
+  const { setAnsiColor } = useTheme();
+
+  return (
+    <div className="flex-1 flex justify-between" key={color}>
+      <Label className="text-sm" htmlFor={`${color}-${variant}`}>
+        {getAnsiColorLabel(color as AnsiColor)}
+      </Label>
+      <input
+        id={`${color}-${variant}`}
+        type="color"
+        className="justify-self-center w-10"
+        value={value}
+        onChange={(e) => {
+          setAnsiColor(color as AnsiColor, variant, e.target.value as string);
+        }}
+      />
+    </div>
   );
 }
