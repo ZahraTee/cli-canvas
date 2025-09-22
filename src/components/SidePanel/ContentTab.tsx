@@ -210,7 +210,7 @@ function BackgroundColorButton({
     <ColorButton
       label="BG"
       onClick={onClick}
-      className={`color-terminal-fg ${getBgColorClassName(color, variant)}`}
+      className={`text-terminal-fg ${getBgColorClassName(color, variant)}`}
     />
   );
 }

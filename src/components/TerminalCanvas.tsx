@@ -7,16 +7,17 @@ export const TerminalCanvas = React.forwardRef<HTMLDivElement>(
     const { editor } = useCurrentEditor();
 
     return (
-      <div className="w-full p-12 flex justify-center items-center overflow-auto">
+      <div className="w-full p-8 flex justify-center items-center overflow-auto">
         <Resizable
           className="rounded-lg shadow-lg"
           defaultSize={{
             width: 700,
           }}
+          maxHeight="100%"
         >
           <div
             id="terminal"
-            className="bg-terminal-bg text-terminal-fg flex flex-col max-h-full rounded-lg outline outline-stone-300 dark:outline-stone-700"
+            className="bg-terminal-bg text-terminal-fg flex flex-col h-full rounded-lg outline outline-stone-300 dark:outline-stone-700"
           >
             <TerminalChrome />
             <EditorContent
